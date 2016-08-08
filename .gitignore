@@ -1,0 +1,8 @@
+ws*/
+*/target/*
+*/bin/*
+*/.settings
+*/.project
+*/.mvn
+*/.classpath
+*/.springBeans

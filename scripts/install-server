@@ -1,0 +1,5 @@
+apt-get install rabbitmq-server
+rabbitmq-plugins enable rabbitmq_management
+service rabbitmq-server restart
+apt-get install mysql-server-5.6
+mysql -u root -p < db.sql

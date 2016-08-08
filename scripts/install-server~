@@ -1,0 +1,3 @@
+apt-get install rabbitmq-server
+rabbitmq-plugins enable rabbitmq_management
+service rabbitmq-server restart

@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+  xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+  http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+ 
+  <rabbit:connection-factory id="connectionFactory" host="localhost" virtual-host="sample" username="admin" password="qwerty" />
+ 
+  <rabbit:admin connection-factory="connectionFactory" />
+ 
+  <rabbit:queue name="testqueue" />
+ 
+  <rabbit:direct-exchange name="test exchange"
+    <rabbit:bindings>
+      <rabbit:binding queue="testqueue"></rabbit:binding>
+    </rabbit:bindings>
+  </rabbit:direct-exchange>
+ 
+   <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="testexchange" queue="testqueue" /> 
+</beans>
