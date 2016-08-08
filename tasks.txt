@@ -1,0 +1,29 @@
+ContainerShipManager
+Agent
+Master
+Scripts
+Readme.MD
+Components:
+Master contains: Master code (REST), mysql, rabbitMq broker.
+REST
+http://localhost:8000/csm/login (POST)
+http://localhost:8000/csm/logout (POST)
+http://localhost:8000/csm/<resource> (GET/POST/DELETE/PUT)
+http://localhost:8000/csm/server/{server id} - get list of manged servers (GET/POST/DELETE). POST will create queue for this server.
+Name
+Ip
+id
+http://localhost:8000/csm/command - (POST) low level commands In shell.
+Command
+serverid
+http://localhost:8000/csm/container/{id} - get list of managed containers (GET/POST/DELETE), url parameters (serverid=)
+Name
+Image
+ServerId
+UserId
+http://localhost:8000/csm/container/{id}&action=start
+http://localhost:8000/csm/container/{id}&action=stop
+http://localhost:8000/csm/container/{id}&action=restart
+http://localhost:8000/csm/user - get list of managed users
+
+Agent contains: agent code, ovs, docker, glusterfs
