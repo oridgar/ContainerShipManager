@@ -13,6 +13,7 @@ import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.yaml.snakeyaml.reader.StreamReader;
 
+//test commit #1
 public class Receiver {
 
 	//private CountDownLatch latch = new CountDownLatch(1);
