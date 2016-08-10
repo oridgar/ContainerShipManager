@@ -8,22 +8,60 @@ Master contains: Master code (REST), mysql, rabbitMq broker.
 REST
 http://localhost:8000/csm/login (POST)
 http://localhost:8000/csm/logout (POST)
+
 http://localhost:8000/csm/<resource> (GET/POST/DELETE/PUT)
+
+# Server #
 http://localhost:8000/csm/server/{server id} - get list of manged servers (GET/POST/DELETE). POST will create queue for this server.
 Name
 Ip
 id
-http://localhost:8000/csm/command - (POST) low level commands In shell.
-Command
-serverid
+http://localhost:8000/csm/server/{id}/command - (POST) low level commands In shell.
+commandName
+
+# Container #
 http://localhost:8000/csm/container/{id} - get list of managed containers (GET/POST/DELETE), url parameters (serverid=)
-Name
-Image
-ServerId
-UserId
+{
+	Id
+	Name
+	Image
+	ServerId
+	UserId
+}
+for Agent:
+
+
 http://localhost:8000/csm/container/{id}&action=start
 http://localhost:8000/csm/container/{id}&action=stop
 http://localhost:8000/csm/container/{id}&action=restart
+
+# User #
 http://localhost:8000/csm/user - get list of managed users
 
 Agent contains: agent code, ovs, docker, glusterfs
+
+
+# Agent REST #
+http://localhost:8000/csa/register (POST)
+{
+  "csmHostName":"",
+  "queueName":"",
+  "csaId":"",
+  "csaName":""
+}
+
+http://localhost:8000/csa/unregister (POST)
+{
+  "csmHostName":"",
+  "queueName":"",
+  "csaId":"",
+  "csaName":""
+}
+
+
+MQ command structure:
+{
+	"commandName"
+	"containerName"
+	"imageName"
+}

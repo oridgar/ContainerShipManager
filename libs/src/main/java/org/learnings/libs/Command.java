@@ -1,4 +1,4 @@
-package org.learnings;
+package org.learnings.libs;
 
 public class Command {
 	private String commandName;

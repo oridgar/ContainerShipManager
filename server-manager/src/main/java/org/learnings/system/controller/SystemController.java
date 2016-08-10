@@ -4,7 +4,7 @@ import org.learnings.system.domain.SystemLinux;
 
 import java.util.List;
 
-import org.learnings.Command;
+import org.learnings.libs.Command;
 import org.learnings.system.domain.System;
 import org.learnings.system.service.SystemService;
 import org.learnings.system.service.SystemType;
@@ -26,43 +26,45 @@ public class SystemController {
 	@Autowired
 	private SystemService systemService;
 
-	@RequestMapping(value = "/systems/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/server/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<System> getSystem(@PathVariable String name) {
 
-		System sys = systemService.getSystem(SystemType.Linux, name);
+		System sys = systemService.getSystem(name);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		return new ResponseEntity<>(sys, httpHeaders, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/systems", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/server", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<List<SystemLinux>> getSystemList() {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		return new ResponseEntity<>(systemService.getSystemList(), httpHeaders, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/systems", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/server", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HttpStatus> createSystem(@RequestBody SystemLinux sys) {
 		systemService.createSystem(sys);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/systems/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/server/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<HttpStatus> deleteSystem(@PathVariable String id) {
 		systemService.deleteSystem(id);
 		return new ResponseEntity<>(HttpStatus.GONE);
 	}
 	
-	@RequestMapping(value = "/systems/hostname", method = RequestMethod.GET)
-	public ResponseEntity<HttpStatus> getHostname() {
-		systemService.getHostname();
-		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	@RequestMapping(value = "/server/{id}", method = RequestMethod.GET)
+	public ResponseEntity<System> getHostname(@PathVariable String id) {
+		System sys = systemService.getSystem(id);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		return new ResponseEntity<>(sys, httpHeaders, HttpStatus.ACCEPTED);
 	}
 	
-	@RequestMapping(value = "/systems/echo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> echo(@RequestBody Command message) {
-		String ret = systemService.echo(message);
+	@RequestMapping(value = "/server/{id}/command", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> echo(@RequestBody Command message,@PathVariable String id) {
+		org.learnings.system.domain.System server = systemService.getSystem(id);
+		String ret = systemService.command(server, message);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		return new ResponseEntity<>(ret, httpHeaders, HttpStatus.ACCEPTED);
 	}

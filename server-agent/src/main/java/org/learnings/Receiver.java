@@ -13,6 +13,8 @@ import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.yaml.snakeyaml.reader.StreamReader;
 
+import org.learnings.libs.Command;
+
 //test commit #1
 public class Receiver {
 

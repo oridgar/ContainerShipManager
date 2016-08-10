@@ -24,21 +24,21 @@ public class UserController {
 	private UserService userService;
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/users/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/user/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public User getUser(@PathVariable String name) {
 		return userService.getUserByName(name);
 	}
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<User> getUsersList() {
 		return userService.getUserList();
 	}
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<HttpStatus> getUsersList(@RequestBody User user) {
 		userService.createUser(user);		

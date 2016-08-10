@@ -49,7 +49,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         // failure handler
         // success handler
         // who is permitted
-        http.formLogin().loginProcessingUrl("/login-action")
+        http.formLogin().loginProcessingUrl("/login")
         .failureHandler((request, response, authentication) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         })
@@ -59,7 +59,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll().and().httpBasic();
 
         // configuration for logout
-        http.logout().logoutUrl("/logout-action")
+        http.logout().logoutUrl("/logout")
         .logoutSuccessHandler((request, response, authentication) -> {
             response.setStatus(HttpStatus.OK.value());
         })

@@ -3,10 +3,8 @@ package org.learnings.system.service.impl;
 import org.learnings.system.domain.SystemLinux;
 import org.learnings.system.repository.SystemRepository;
 import org.learnings.system.service.SystemService;
-import org.learnings.system.service.SystemType;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.connection.LocalizedQueueConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +21,8 @@ import javax.annotation.PostConstruct;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.learnings.Command;
+import org.learnings.libs.Command;
+import org.learnings.libs.RabbitCommon;
 import org.learnings.system.domain.System;
 
 @Service
@@ -35,24 +34,33 @@ public class SystemServiceImpl implements SystemService {
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
 	
-	@Value("${queue.name}")
-	private String queueName;
+	//@Value("${queue.name}")
+	//private String queueName;
 	
 	@Value("${queue.exchange}")
 	private String exchange;
 	
+	@Value("${spring.rabbitmq.host}")
+	private String brokerHostName;
+	
 	@Override
-	public System getSystem(SystemType type, String hostName) {
-		return systemRepository.findOneByHostname(hostName);
+	public System getSystem(String id) {
+		return systemRepository.findOneById(id);
 	}
 
 	@Override
 	public void createSystem(SystemLinux details) {
+		String queueName = details.getId();
+		
+		//Creating the queue
+		RabbitCommon.createEntities(queueName, exchange, queueName);
+		
 		systemRepository.save(details);
 	}
 	
 	@Override
 	public void deleteSystem(String id) {
+		RabbitCommon.DeleteEntities(id, exchange, id);
 		systemRepository.delete(id);
 	}
 
@@ -67,10 +75,10 @@ public class SystemServiceImpl implements SystemService {
 		return null;
 	}
 	
-	public String echo(Command message) {
+	public String command(System system, Command message) {
 		String ret = null;
 		ObjectMapper mapper = new ObjectMapper();
-		byte[] a;
+		//byte[] a;
 		try {
 			//Creating properties for the message
 			MessageProperties props = new MessageProperties();
@@ -83,7 +91,7 @@ public class SystemServiceImpl implements SystemService {
 			Message mqMessage = new Message(mapper.writeValueAsBytes(message), props);
 			
 			//Sending the message and wait for reply
-			Message retMessage = rabbitTemplate.sendAndReceive("", "agent", mqMessage);
+			Message retMessage = rabbitTemplate.sendAndReceive("", system.getId(), mqMessage);
 			if (retMessage != null)  {
 				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
 				//java.lang.System.out.println(ret);
@@ -98,7 +106,8 @@ public class SystemServiceImpl implements SystemService {
 	}
 	@PostConstruct
 	private void init() {
-		rabbitTemplate.setExchange(exchange);
-		rabbitTemplate.setQueue(queueName);
+		//rabbitTemplate.setExchange(exchange);
+		//rabbitTemplate.setQueue(queueName);
+		RabbitCommon.setBrokerHostName(brokerHostName);
 	}
 }

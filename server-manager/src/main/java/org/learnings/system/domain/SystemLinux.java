@@ -15,8 +15,8 @@ public class SystemLinux implements System {
 	@Column(name = "id", length = 100)
 	private String id;
 
-	@Column(name = "type")
-	private SystemType type = SystemType.Linux;
+	//@Column(name = "type")
+	//private SystemType type = SystemType.Linux;
 	
 	@Column(name = "hostname")
 	private String hostname;
@@ -25,19 +25,14 @@ public class SystemLinux implements System {
 	private String ip;
 	
 	@Override
-	public String getHostName() {
-		return hostname;
-	}
-
-	@Override
 	public String getIp() {
 		return ip;
 	}
 	
-	@Override
-	public SystemType getType() {
-		return type;
-	}
+	//@Override
+	//public SystemType getType() {
+		//return type;
+	//}
 
 	@Override
 	public String getId() {
@@ -59,10 +54,10 @@ public class SystemLinux implements System {
 		this.hostname = hostname;
 	}
 
-	@Override
-	public void setType(SystemType type) {
-		this.type = type;
-	}
+	//@Override
+	//public void setType(SystemType type) {
+		//this.type = type;
+	//}
 
 	@Override
 	public void setIp(String ip) {

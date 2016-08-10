@@ -28,21 +28,23 @@ public class ServerAgentApplication implements CommandLineRunner {
 	@Value("${queue.name}")
 	String queueName;
 
+	@Value("${spring.rabbitmq.host}")
+	String brokerHostName;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(ServerAgentApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		String brokerHostName = "localhost";
 		String exchangeName = "";
-		String serverQueuename = "serverManager";
-		String queueName = "agent";
+		//String serverQueuename = "serverManager";
+		//String queueName = "agent";
 		
 		// Managing connections for specific rabbitMQ message broker
 		ConnectionFactory cf = new CachingConnectionFactory(brokerHostName);
 		
-		createEntities(cf, queueName, exchangeName, queueName);
+		//createEntities(cf, queueName, exchangeName, queueName);
 		
 		runMessageListener(queueName, exchangeName, brokerHostName);
 		//runCustomListener(queuename);

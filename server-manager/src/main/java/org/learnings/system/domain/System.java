@@ -3,13 +3,12 @@ package org.learnings.system.domain;
 import org.learnings.system.service.SystemType;
 
 public interface System {
-	public String getHostName();
 	public String getIp();
-	SystemType getType();
-	String getId();
-	void setId(String id);
-	String getHostname();
-	void setHostname(String hostname);
-	void setType(SystemType type);
-	void setIp(String ip);
+	//SystemType getType();
+	public String getId();
+	public void setId(String id);
+	public String getHostname();
+	public void setHostname(String hostname);
+	//void setType(SystemType type);
+	public void setIp(String ip);
 }
