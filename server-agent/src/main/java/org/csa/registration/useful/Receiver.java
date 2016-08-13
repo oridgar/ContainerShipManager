@@ -1,4 +1,4 @@
-package org.learnings;
+package org.csa.registration.useful;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,8 +80,5 @@ public class Receiver {
 		return ret.toString();
 	}
 
-//	public CountDownLatch getLatch() {
-//		return latch;
-//	}
 
 }
