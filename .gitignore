@@ -6,3 +6,4 @@ ws*/
 */.mvn
 */.classpath
 */.springBeans
+*.log

@@ -47,19 +47,19 @@ public class ContainerController {
 	}
 	
 	
-	@RequestMapping(value = "/container/{id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/container/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Container getContainer(@PathVariable String id) {
 		return containerService.getContainer(id);
 	}
 
-	@RequestMapping(value = "/container", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/container", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<ContainerImpl> getContainerList() {
 		return containerService.getContainerList();
 	}
 	
-	@RequestMapping(value = "/container/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/container/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<HttpStatus> deleteContainer(@PathVariable String id) {
 		containerService.deleteContainer(id);

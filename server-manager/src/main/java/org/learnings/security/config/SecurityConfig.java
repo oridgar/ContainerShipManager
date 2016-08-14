@@ -38,8 +38,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     	//Determine which URL is valid for authentication.
         http.csrf().disable().authorizeRequests()
-        .antMatchers("/app/login/*")
-        	.permitAll()
+        .antMatchers("/login.html").permitAll()
+        .antMatchers("/js/*").permitAll()
+        .antMatchers("/css/*").permitAll()
         .anyRequest()
         	.fullyAuthenticated();
 
@@ -49,7 +50,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         // failure handler
         // success handler
         // who is permitted
-        http.formLogin().loginProcessingUrl("/login")
+        //
+        http.formLogin().loginProcessingUrl("/login").loginPage("/login.html")
         .failureHandler((request, response, authentication) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         })
