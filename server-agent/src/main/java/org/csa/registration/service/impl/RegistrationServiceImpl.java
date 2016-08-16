@@ -33,6 +33,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 	
 	@Value("${csa.ext-config-location}")
     private String externalConfigLocation;
+	
+	private SimpleMessageListenerContainer container;
 
 	private RegistrationDO registrationDO;	
 
@@ -41,12 +43,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 	public void init(){
 		registrationDO = getConfig();
 		if(registrationDO != null){
-			register(registrationDO);
+			register(registrationDO, false);
 		}
 	}
 
 	@Override
 	public void register(RegistrationDO registrationDO) {		
+		register(registrationDO, true);
+	}
+	
+	
+	private void register(RegistrationDO registrationDO, boolean saveConfig) {		
 
 		JsonMessageConverter converter = new JsonMessageConverter();
 		
@@ -55,13 +62,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 		listener.setMessageConverter(converter);
 		
 		
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+		container = new SimpleMessageListenerContainer();
 		container.setMessageListener(listener);
 		container.setConnectionFactory(rabbitTemplate.getConnectionFactory());
 		container.setQueueNames(registrationDO.getQueueName());
 		
 		container.start();
-		saveConfig(registrationDO);
+		if(saveConfig){
+			saveConfig(registrationDO);
+		}
 	}
 	
 	
@@ -91,8 +100,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 		RegistrationDO registrationDO = null;
 		InputStream is = null;
 		try {
-			is = FileUtils.openInputStream
-				      (new File(externalConfigLocation));
+			File f = new File(externalConfigLocation);
+			FileUtils.touch(f);
+			is = FileUtils.openInputStream(f);
 			Properties props = new Properties();
 			props.load(is);
 			if(StringUtils.isNotEmpty(props.getProperty("queueName"))){
@@ -103,7 +113,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 				registrationDO.setCsaName(props.getProperty("csaName"));
 				register(registrationDO);
 			}
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -111,6 +121,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 		return registrationDO;
 	}
+	
 
 	public RegistrationDO getRegistrationDO() {
 		return registrationDO;
