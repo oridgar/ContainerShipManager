@@ -1,7 +1,6 @@
 package org.csa.registration.service.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
@@ -14,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.csa.registration.domain.RegistrationDO;
 import org.csa.registration.service.GeneralMessageReceiverService;
 import org.csa.registration.service.RegistrationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -37,6 +38,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 	private SimpleMessageListenerContainer container;
 
 	private RegistrationDO registrationDO;	
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	
 	@PostConstruct
@@ -87,8 +90,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 			os = FileUtils.openOutputStream
 			  (new File(externalConfigLocation));
 			props.store(os, null);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		} finally {
             IOUtils.closeQuietly(os);
         }
@@ -114,8 +117,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 				register(registrationDO);
 			}
 			
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		} finally {
             IOUtils.closeQuietly(is);
         }
