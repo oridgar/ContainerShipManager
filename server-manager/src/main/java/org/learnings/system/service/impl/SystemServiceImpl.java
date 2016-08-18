@@ -2,6 +2,8 @@ package org.learnings.system.service.impl;
 
 import org.learnings.system.domain.SystemLinux;
 import org.learnings.system.repository.SystemRepository;
+import org.learnings.system.restclient.CsaConnector;
+import org.learnings.system.restclient.CsaConnectorFactory;
 import org.learnings.system.service.SystemService;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
@@ -9,6 +11,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import retrofit.client.Response;
 
 import org.springframework.amqp.core.MessageProperties;
 
@@ -23,6 +27,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.learnings.libs.Command;
 import org.learnings.libs.RabbitCommon;
+import org.learnings.libs.RegisterCsaDO;
 import org.learnings.system.domain.System;
 
 @Service
@@ -55,6 +60,14 @@ public class SystemServiceImpl implements SystemService {
 		//Creating the queue
 		RabbitCommon.createEntities(queueName, exchange, queueName);
 		
+		RegisterCsaDO newCsa = new RegisterCsaDO();
+		newCsa.setCsaId(details.getId());
+		newCsa.setCsaName(details.getHostname());
+		newCsa.setCsmHostName(brokerHostName);
+		newCsa.setQueueName(queueName);
+		
+		CsaConnector csa = CsaConnectorFactory.getConnector(details.getIp(), "8100");
+		Response a = csa.register(newCsa);
 		systemRepository.save(details);
 	}
 	

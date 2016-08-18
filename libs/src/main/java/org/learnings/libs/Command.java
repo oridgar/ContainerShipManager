@@ -1,6 +1,6 @@
 package org.learnings.libs;
 
-public class Command {
+public class Command implements ICommand {
 	private String commandName;
 	private String containerName;
 	private String imageName;

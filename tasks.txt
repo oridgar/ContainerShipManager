@@ -65,3 +65,14 @@ MQ command structure:
 	"containerName"
 	"imageName"
 }
+
+commands:
+CreateContainer
+RemoveContainer
+StartContainer
+StopContainer
+RestartContainer
+
+- Create dpkg
+- Create service for systemd
+- 

@@ -3,17 +3,9 @@ package org.csa.registration.useful;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CountDownLatch;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.yaml.snakeyaml.reader.StreamReader;
 
 import org.learnings.libs.Command;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 //test commit #1
 public class Receiver {
@@ -36,7 +28,7 @@ public class Receiver {
 
 	public String receiveMessage(Command message) {
 		StringBuilder ret = new StringBuilder();
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
 		try {
 			Command receivedCommand = message;
 			//Command receivedCommand = mapper.readValue((String)message, Command.class);

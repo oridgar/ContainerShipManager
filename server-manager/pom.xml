@@ -66,6 +66,38 @@
 			<artifactId>libs</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+			    <dependency>
+            <groupId>com.squareup.retrofit</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        
+                
+        <dependency>
+			<groupId>com.squareup.retrofit</groupId>
+			<artifactId>converter-jackson</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		
+		
+		<dependency>
+            <groupId>org.apache.geronimo.bundles</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1_2</version>
+        </dependency>
+              
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
 	</dependencies>
 
 	<build>

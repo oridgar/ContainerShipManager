@@ -24,6 +24,9 @@ public class SystemLinux implements System {
 	@Column(name = "ip")
 	private String ip;
 	
+	@Column(name = "port")
+	private String port;
+		
 	@Override
 	public String getIp() {
 		return ip;
@@ -63,4 +66,14 @@ public class SystemLinux implements System {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+	
+	
 }
