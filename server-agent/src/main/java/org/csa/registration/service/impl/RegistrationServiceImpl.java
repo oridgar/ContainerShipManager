@@ -10,11 +10,12 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.csa.registration.domain.RegistrationDO;
 import org.csa.registration.service.GeneralMessageReceiverService;
 import org.csa.registration.service.RegistrationService;
+import org.learnings.libs.RegisterCsaDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -37,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	
 	private SimpleMessageListenerContainer container;
 
-	private RegistrationDO registrationDO;	
+	private RegisterCsaDO registrationDO;	
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,12 +52,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 
 	@Override
-	public void register(RegistrationDO registrationDO) {		
+	public void register(RegisterCsaDO registrationDO) {		
 		register(registrationDO, true);
 	}
 	
 	
-	private void register(RegistrationDO registrationDO, boolean saveConfig) {		
+	private void register(RegisterCsaDO registrationDO, boolean saveConfig) {		
 
 		JsonMessageConverter converter = new JsonMessageConverter();
 		
@@ -64,10 +65,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 		listener.setDefaultListenerMethod("receiveMessage");
 		listener.setMessageConverter(converter);
 		
+		CachingConnectionFactory connectionFactory = new CachingConnectionFactory(registrationDO.getMqHost());
+	    connectionFactory.setPort(registrationDO.getMqPort());
+	    connectionFactory.setUsername(registrationDO.getMqUser());
+	    connectionFactory.setPassword(registrationDO.getMqPassword());
+		
 		
 		container = new SimpleMessageListenerContainer();
 		container.setMessageListener(listener);
-		container.setConnectionFactory(rabbitTemplate.getConnectionFactory());
+		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames(registrationDO.getQueueName());
 		
 		container.start();
@@ -77,13 +83,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 	
 	
-	private void saveConfig(RegistrationDO registrationDO){
+	private void saveConfig(RegisterCsaDO registrationDO){
 		
 		Properties props = new Properties();
 		props.setProperty("queueName", registrationDO.getQueueName());
 		props.setProperty("csmHostName", registrationDO.getCsmHostName());
 		props.setProperty("csaId", registrationDO.getCsaId());
-		props.setProperty("csaName", registrationDO.getCsaName());
+		props.setProperty("csaName", registrationDO.getCsaName());		
+		props.setProperty("mqHost", registrationDO.getMqHost());
+		props.setProperty("mqPort", registrationDO.getMqPort().toString());
+		props.setProperty("mqUser", registrationDO.getMqUser());
+		props.setProperty("mqPassword", registrationDO.getMqPassword());
 		
 		OutputStream os = null;
 		try {
@@ -99,8 +109,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 	
 	
-	private RegistrationDO getConfig(){
-		RegistrationDO registrationDO = null;
+	private RegisterCsaDO getConfig(){
+		RegisterCsaDO registrationDO = null;
 		InputStream is = null;
 		try {
 			File f = new File(externalConfigLocation);
@@ -109,11 +119,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 			Properties props = new Properties();
 			props.load(is);
 			if(StringUtils.isNotEmpty(props.getProperty("queueName"))){
-				registrationDO = new RegistrationDO();
+				registrationDO = new RegisterCsaDO();
 				registrationDO.setQueueName(props.getProperty("queueName"));
 				registrationDO.setCsmHostName(props.getProperty("csmHostName"));
 				registrationDO.setCsaId(props.getProperty("csaId"));
-				registrationDO.setCsaName(props.getProperty("csaName"));
+				registrationDO.setCsaName(props.getProperty("csaName"));				
+				registrationDO.setMqHost(props.getProperty("mqHost"));
+				registrationDO.setMqPort(Integer.parseInt(props.getProperty("mqPort")));
+				registrationDO.setMqUser(props.getProperty("mqUser"));
+				registrationDO.setMqPassword(props.getProperty("mqPassword"));
 				register(registrationDO);
 			}
 			
@@ -126,11 +140,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 	
 
-	public RegistrationDO getRegistrationDO() {
+	public RegisterCsaDO getRegistrationDO() {
 		return registrationDO;
 	}
 
-	public void setRegistrationDO(RegistrationDO registrationDO) {
+	public void setRegistrationDO(RegisterCsaDO registrationDO) {
 		this.registrationDO = registrationDO;
 	}
 	

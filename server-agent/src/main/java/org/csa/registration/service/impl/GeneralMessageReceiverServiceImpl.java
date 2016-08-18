@@ -17,7 +17,7 @@ public class GeneralMessageReceiverServiceImpl implements
 	
 	
 	public static final String COMMAND_TEMPLATE = "docker run --name %s -itd %s";
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(org.csa.registration.service.impl.GeneralMessageReceiverServiceImpl.class);
 	
 		
 	public String receiveMessage(Command message) {
