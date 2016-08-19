@@ -1,7 +1,7 @@
 package org.csa.registration.service;
 
-import org.csa.registration.domain.RegistrationDO;
+import org.learnings.libs.RegisterCsaDO;
 
 public interface RegistrationService {
-	public void register(RegistrationDO registrationDO);
+	public void register(RegisterCsaDO registrationDO);
 }

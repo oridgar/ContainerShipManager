@@ -1,6 +1,5 @@
 package org.csa.registration.service.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -8,6 +7,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.csa.registration.service.GeneralMessageReceiverService;
 import org.learnings.libs.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,11 +17,12 @@ public class GeneralMessageReceiverServiceImpl implements
 	
 	
 	public static final String COMMAND_TEMPLATE = "docker run --name %s -itd %s";
+	private final Logger logger = LoggerFactory.getLogger(org.csa.registration.service.impl.GeneralMessageReceiverServiceImpl.class);
 	
 		
 	public String receiveMessage(Command message) {
 		String command = String.format(COMMAND_TEMPLATE, message.getContainerName(), message.getImageName());
-		System.out.println("Command is - " + command);
+		logger.info("Command is - " + command);
 		OutputStream outputStream = null;
 		InputStream inputStream = null;
 		InputStream errorStream = null;
@@ -34,19 +36,19 @@ public class GeneralMessageReceiverServiceImpl implements
 			
 			inputStream = proc.getInputStream();
 			String outStr = IOUtils.toString(inputStream);
-			System.out.println("Command output is -- " + outStr);
+			logger.info("Command output is - " + outStr);
 			
 			errorStream = proc.getErrorStream();
 			String errStr = IOUtils.toString(errorStream);
-			System.out.println("Command error is -- " + errStr);
+			logger.info("Command error is - " + errStr);
 			
 			res = outStr;
 			if(StringUtils.isEmpty(res)){
 				res = errStr;
 			}
 			
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		} finally{			
 			IOUtils.closeQuietly(inputStream);
 			IOUtils.closeQuietly(errorStream);

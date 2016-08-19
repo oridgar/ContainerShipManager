@@ -1,10 +1,16 @@
 package org.learnings.libs;
 
 public class RegisterCsaDO {
+	
 	private String csmHostName;
 	private String queueName;
 	private String csaId;
 	private String csaName;
+	private String mqHost;
+	private Integer mqPort;
+	private String mqUser;
+	private String mqPassword;
+	
 	public String getCsmHostName() {
 		return csmHostName;
 	}
@@ -29,4 +35,31 @@ public class RegisterCsaDO {
 	public void setCsaName(String csaName) {
 		this.csaName = csaName;
 	}
+	public String getMqHost() {
+		return mqHost;
+	}
+	public void setMqHost(String mqHost) {
+		this.mqHost = mqHost;
+	}
+		
+	public Integer getMqPort() {
+		return mqPort;
+	}
+	public void setMqPort(Integer mqPort) {
+		this.mqPort = mqPort;
+	}
+	public String getMqUser() {
+		return mqUser;
+	}
+	public void setMqUser(String mqUser) {
+		this.mqUser = mqUser;
+	}
+	public String getMqPassword() {
+		return mqPassword;
+	}
+	public void setMqPassword(String mqPassword) {
+		this.mqPassword = mqPassword;
+	}
+	
+	
 }
