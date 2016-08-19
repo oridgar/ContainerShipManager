@@ -1,5 +1,25 @@
-apt-get install rabbitmq-server
+#if [[ -z $1 ]]; then
+#	"Usage: install-server <mysql password>"
+#	exit 1
+#fi
+
+if [[ $UID -ne 0]]; then
+	"$0: Need to be root"
+	exit 1
+fi
+
+#PASSWORD=$1
+sudo add-apt-repository ppa:openjdk-r/ppa -y
+apt-get update
+
+apt-get install openssh-server -y
+apt-get install rabbitmq-server -y
 rabbitmq-plugins enable rabbitmq_management
 service rabbitmq-server restart
-apt-get install mysql-server-5.6
-mysql -u root -p < db.sql
+apt-get install mysql-server-5.6 -y #find a way to install without dpkg-reconfigure TUI
+#mysql -u root -p$PASSWORD < db.sql
+#Will install mysql with no password by default
+mysql -u root < db.sql
+apt-get install ojenjdk-8-jre-headless
+#Check how to choose java 8 as default. manually done through update-alternatives --config java
+#Install csm package

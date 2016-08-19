@@ -82,8 +82,8 @@ public class ContainerServiceImpl implements ContainerService {
 		
 		Command sendCommand = new Command();
 		sendCommand.setCommandName("");
-		sendCommand.setContainerName(details.getName());
-		sendCommand.setImageName(details.getImage());
+		sendCommand.setContainerName(currCont.getName());
+		sendCommand.setImageName(currCont.getImage());
 		
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -100,7 +100,7 @@ public class ContainerServiceImpl implements ContainerService {
 			Message mqMessage = new Message(mapper.writeValueAsBytes(sendCommand), props);
 			
 			//Sending the message and wait for reply
-			Message retMessage = rabbitTemplate.sendAndReceive("", details.getServerId(), mqMessage);
+			Message retMessage = rabbitTemplate.sendAndReceive("", currCont.getServerId(), mqMessage);
 			if (retMessage != null)  {
 				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
 			}

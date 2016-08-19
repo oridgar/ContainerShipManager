@@ -1,0 +1,1 @@
+apt-get install maven libncurses5-dev openjdk-8-jdk-headless git -y

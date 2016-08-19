@@ -2,7 +2,7 @@
 //--------
 angular.module('csm').service('simpleService', ['$http', function ($http) {
 	//Data members
-    var urlBase = 'http://localhost:8000/csm';
+    var urlBase = '/csm';
 
 	//Methods
 	/*

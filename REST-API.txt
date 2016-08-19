@@ -1,0 +1,90 @@
+CSM
+===
+
+general
+-------
+http://<ip or fqdn>:8000/csm/<resource> (GET/POST/DELETE/PUT)
+
+login
+-----
+POST, http://<ip or fqdn>:8000/csm/login, login with specific user credentials, url encoded parameters
+POST, http://<ip or fqdn>:8000/csm/logout
+
+parameters:
+
+
+Server
+------
+GET, http://<ip or fqdn>:8000/csm/server, get managed server properties
+GET, http://<ip or fqdn>:8000/csm/server/{server id}, get managed server properties
+POST, http://<ip or fqdn>:8000/csm/server, create new managed server
+POST, http://<ip or fqdn>:8000/csm/server/{server id}/command, low level commands In shell.
+DELETE, http://<ip or fqdn>:8000/csm/server/{server id}, delete managed server
+
+server data object:
+{
+	name
+	ip
+	id
+	commandName
+}
+
+command data object:
+
+
+Container
+---------
+GET, http://<ip or fqdn>:8000/csm/container/, get list of managed containers, 
+POST, http://<ip or fqdn>:8000/csm/container/, create new container
+GET, http://<ip or fqdn>:8000/csm/container/{container id}, get detailes of managed container
+DELETE, http://<ip or fqdn>:8000/csm/container/{container id}, delete managed container
+
+container data object:
+{
+   "Id":"",
+   "Name":"",
+   "Image":"",
+   "ServerId":"",
+   "UserId":""
+}
+   
+User
+----
+GET, http://<ip or fqdn>:8000/csm/user - get list of managed users
+
+user data object:
+{
+	
+
+}
+
+MQ Format between CSM and CSA
+==============================
+
+command data object:
+{
+	"commandName":"",
+	"containerName":"",
+	"imageName":""
+}
+
+Container Commands ENUM:
+*CreateContainer
+*RemoveContainer
+*StartContainer
+*StopContainer
+*RestartContainer
+
+CSA
+===
+
+POST, http://<ip or fqdn>:8100/csa/register
+POST, http://<ip or fqdn>:8100/csa/unregister
+
+registration data object
+{
+  "csmHostName":"",
+  "queueName":"",
+  "csaId":"",
+  "csaName":""
+}
