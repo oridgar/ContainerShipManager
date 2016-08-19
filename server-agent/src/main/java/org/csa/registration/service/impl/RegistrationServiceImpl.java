@@ -1,6 +1,7 @@
 package org.csa.registration.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
@@ -56,6 +57,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 		register(registrationDO, true);
 	}
 	
+	@Override
+	public void unregister() {
+		try {
+			FileUtils.writeStringToFile(new File(externalConfigLocation), StringUtils.EMPTY);
+			if(container != null){
+				container.stop();
+				container.destroy();
+				
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
 	
 	private void register(RegisterCsaDO registrationDO, boolean saveConfig) {		
 
@@ -75,6 +90,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 		container.setMessageListener(listener);
 		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames(registrationDO.getQueueName());
+		container.setAutoStartup(false);
 		
 		container.start();
 		if(saveConfig){
@@ -147,6 +163,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	public void setRegistrationDO(RegisterCsaDO registrationDO) {
 		this.registrationDO = registrationDO;
 	}
+
 	
 	
 

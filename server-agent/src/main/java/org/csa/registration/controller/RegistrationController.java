@@ -26,6 +26,13 @@ public class RegistrationController {
 		registrationService.register(registrationDO);
 		return new ResponseEntity<>(registrationDO, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/unregister", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<HttpStatus> register() {
+		
+		registrationService.unregister();
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 
 	
 }
