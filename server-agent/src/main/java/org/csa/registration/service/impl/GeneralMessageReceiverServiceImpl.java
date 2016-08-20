@@ -6,7 +6,8 @@ import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.csa.registration.service.GeneralMessageReceiverService;
-import org.learnings.libs.Command;
+import org.learnings.libs.ContainerCommandDO;
+import org.learnings.libs.ICommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,20 @@ public class GeneralMessageReceiverServiceImpl implements
 		GeneralMessageReceiverService {  
 	
 	
-	public static final String COMMAND_TEMPLATE = "docker run --name %s -itd %s";
+	public static final String CREATE_TEMPLATE = "docker create --name %s -it %s";
+	public static final String START_TEMPLATE = "docker start %s";
+	public static final String STOP_TEMPLATE = "docker stop %s";
+	public static final String REMOVE_TEMPLATE = "docker rm --force %s";
+	
 	private final Logger logger = LoggerFactory.getLogger(org.csa.registration.service.impl.GeneralMessageReceiverServiceImpl.class);
 	
 		
-	public String receiveMessage(Command message) {
-		String command = String.format(COMMAND_TEMPLATE, message.getContainerName(), message.getImageName());
+	public String receiveMessage(ICommand message) {
+		
+		ContainerCommandDO containerCommandDO = (ContainerCommandDO)message;
+		
+		String command = getCommand(containerCommandDO);
+		
 		logger.info("Command is - " + command);
 		OutputStream outputStream = null;
 		InputStream inputStream = null;
@@ -55,6 +64,62 @@ public class GeneralMessageReceiverServiceImpl implements
 		}
 		return res;
 	}
+	
+	private String getCommand(ContainerCommandDO containerCommandDO){
+		String command = null;
+		
+		if(containerCommandDO.getCommandType().equals(ContainerCommandDO.CREATE_COMMAND)){
+			command = String.format(CREATE_TEMPLATE, containerCommandDO.getName(), containerCommandDO.getImageName());
+		}
+		else if(containerCommandDO.getCommandType().equals(ContainerCommandDO.START_COMMAND)){
+			command = String.format(START_TEMPLATE, containerCommandDO.getName());
+		}
+		else if(containerCommandDO.getCommandType().equals(ContainerCommandDO.STOP_COMMAND)){
+			command = String.format(STOP_TEMPLATE, containerCommandDO.getName());
+		}
+		else if(containerCommandDO.getCommandType().equals(ContainerCommandDO.REMOVE_COMMAND)){
+			command = String.format(REMOVE_TEMPLATE, containerCommandDO.getName());
+		}
+		
+		return command;
+	}
+	
+	
+	/*public String receiveMessage(Command message) {
+		String command = String.format(COMMAND_TEMPLATE, message.getContainerName(), message.getImageName());
+		logger.info("Command is - " + command);
+		OutputStream outputStream = null;
+		InputStream inputStream = null;
+		InputStream errorStream = null;
+		String res = null;
+		try {
+			
+			Process proc = Runtime.getRuntime().exec("/bin/bash");
+			outputStream = proc.getOutputStream();
+			IOUtils.write(command.getBytes(), outputStream);
+			IOUtils.closeQuietly(outputStream);
+			
+			inputStream = proc.getInputStream();
+			String outStr = IOUtils.toString(inputStream);
+			logger.info("Command output is - " + outStr);
+			
+			errorStream = proc.getErrorStream();
+			String errStr = IOUtils.toString(errorStream);
+			logger.info("Command error is - " + errStr);
+			
+			res = outStr;
+			if(StringUtils.isEmpty(res)){
+				res = errStr;
+			}
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} finally{			
+			IOUtils.closeQuietly(inputStream);
+			IOUtils.closeQuietly(errorStream);
+		}
+		return res;
+	}*/
 	
 
 	/*@Override

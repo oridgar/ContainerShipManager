@@ -1,7 +1,7 @@
 package org.csa.registration.service;
 
-import org.learnings.libs.Command;
+import org.learnings.libs.ICommand;
 
 public interface GeneralMessageReceiverService {
-	public String receiveMessage(Command message);
+	public String receiveMessage(ICommand message);
 }

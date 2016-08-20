@@ -6,6 +6,12 @@ public class ContainerCommandDO implements ICommand{
 	private String id;
 	private String imageName;
 	private String ip;
+	
+	public static final String CREATE_COMMAND = "CREATE_COMMAND";
+	public static final String START_COMMAND = "START_COMMAND";
+	public static final String STOP_COMMAND = "STOP_COMMAND";
+	public static final String REMOVE_COMMAND = "REMOVE_COMMAND";
+	
 	public String getCommandType() {
 		return commandType;
 	}
