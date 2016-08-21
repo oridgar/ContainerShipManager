@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html ng-app="csm" ng-controller='LoginController'>
+	<head>
+		<title>ContainerShipManager login</title>
+		<!-- bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/custom.css">
+
+		<style>
+		.container {
+			text-align: center;	
+		}
+		</style>
+	</head>
+	<body>
+		<!-- you must add this div in order to support routing to views! it includes the chosen view html here -->
+		<div data-ng-view></div>
+		<div class="container">
+			<div>
+				<h2>Login</h2>
+				<p>user:</p>
+				<input type="text" data-ng-model="login.user"/>
+				</br>
+				<p>password:</p>
+				<input type="text" data-ng-model="login.password"/>
+			</div>
+			<div class="row">
+				<button class="btn btn-primary" data-ng-click="login()">Login</button>
+			</div>
+		</div>
+		
+		<!-- bootstrap -->
+		<script src="js/jquery-3.1.0.min.js"></script>
+		<script src="bootstrapjs/bootstrap.min.js"></script>
+
+		<!-- angular framework -->
+		<script src="js/angular.min.js"></script>
+		<script src="js/angular-route.min.js"></script>
+		<!-- my module -->
+		<script src="js/module.js"></script>
+		<script src="js/services.js"></script>
+		<script src="js/loginController.js"></script>
+	</body>
+</html>

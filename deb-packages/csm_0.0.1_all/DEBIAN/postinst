@@ -1,0 +1,4 @@
+#!/bin/sh
+update-rc.d -f csm defaults
+rabbitmq-plugins enable rabbitmq_management
+service rabbitmq-server restart

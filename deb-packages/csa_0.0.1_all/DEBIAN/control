@@ -1,0 +1,11 @@
+Package: csa
+Version: 0.0.1
+Section: base
+Priority: optional
+Architecture: all
+Depends: openjdk-8-jre-headless, docker-engine
+Installed-Size: `du -k -d1 | cut -f1`
+Maintainer: Or Idgar <oridgar@gmail.com>
+Description: Container Ship Agent
+
+

@@ -1,0 +1,102 @@
+#!/bin/sh
+#
+# chkconfig: 35 90 60
+# description: Running Container Ship Agent as a daemon
+#
+# The daemon's name (to ensure uniqueness and for stop, restart and status)
+name="csa"
+# The path of the client executable
+command="/usr/bin/java"
+# Any command line arguments for the client executable
+command_args="-jar /usr/share/csa/lib/csa.jar"
+
+#[ -x "$command" ] || exit 0
+
+. /lib/lsb/init-functions
+
+# Note: The following daemon option arguments could be in /etc/daemon.conf
+# instead. That would probably be better because if the command itself were
+# there as well then we could just use the name here to start the daemon.
+# Here's some code to do it here in case you prefer that.
+
+# The pidfile directory (need to force this so status works for normal users)
+pidfiles="/var/run"
+# The user[:group] to run as (if not to be run as root)
+user=""
+# The path to chroot to (otherwise /)
+chroot=""
+# The path to chdir to (otherwise /)
+chdir=""
+# The umask to adopt, if any
+umask=""
+# The syslog facility or filename for the client's stdout (otherwise discarded)
+stdout="csa.info"
+# The syslog facility or filename for the client's stderr (otherwise discarded)
+stderr="csa.err"
+
+piddir=${pidfiles}/${name}
+pidfile=${piddir}/pid
+
+start_csa () {
+	ensure_pid_dir
+	PID=`/usr/bin/java -jar /usr/share/csa/lib/csa.jar > /dev/null 2>&1 & echo $!`
+	echo $PID > $pidfile
+}
+
+stop_csa () {
+	PID=`cat $pidfile`
+	if [ -f $pidfile ]; then
+		kill $PID
+	fi
+	remove_pid
+}
+
+status_csa () {
+	if [ -f $pidfile ]; then
+		PID=`cat $pidfile`	
+		log_action_msg "${name} start/running, process ${PID}"
+		#echo ${name} start/running, process ${PID}
+	else
+		log_action_msg "${name} is stopped."
+	fi
+}
+
+ensure_pid_dir () {
+	if [ ! -d ${piddir} ]; then
+		mkdir -p $piddir
+		chown -R ${USER}:${USER} ${piddir}
+		chmod 755 ${piddir}
+	fi
+}
+
+remove_pid () {
+	rm -f ${pidfile}
+	rmdir `dirname ${pidfile}` || :
+}
+
+case "$1" in
+    start)
+		log_daemon_msg "Starting ${name}"
+		start_csa
+		#start_stop_end "running"
+		;;
+    stop)
+		log_daemon_msg "Stopping ${name}"
+		stop_csa
+		#start_stop_end "stopped"
+		;;
+    restart|reload)
+		log_daemon_msg "Restarting ${name}"
+		stop_csa
+		start_csa
+		#start_stop_end "restarted"
+		;;
+    status)
+		status_csa
+        ;;
+    *)
+        echo "usage: $0 <start|stop|restart|reload|status>" >&2
+        exit 1
+esac
+
+exit 0  
