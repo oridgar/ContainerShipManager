@@ -11,13 +11,13 @@ Agent
 
 Server
 ======
+<<<<<<< HEAD
 - recommit last commit to remove csa.jar file - Done
 - Implement unregister, register with new data object, stop containter, start container, restart container, remove container (2)
 - configure relationship/constraints in hibernate (3)
 - choose row from the table to interact with data (delete entry for instance)
 - load only relevant data for each view.
 - Show only user containers
-
 
 Both
 ====
@@ -37,6 +37,15 @@ Linux
 - Create service for systemd
 - Scripts for installation of development tools for linux (bash) - In progress
 - create dockerfile(?) for creating csm container image
+
+Linux
+=====
+- Create service for sysVinit - Done
+- Create deb file - (1) - Done
+- Create service for systemd
+- Scripts for installation of development tools for linux (bash) - In progress
+- create dockerfile(?) for creating csm container image
+- enable COM port
 - Scripts for installation of csm (bash) - Canceled
 - Scripts for installation of csa (bash) - Canceled
 

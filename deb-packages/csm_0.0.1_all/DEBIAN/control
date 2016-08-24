@@ -3,8 +3,13 @@ Version: 0.0.1
 Section: base
 Priority: optional
 Architecture: all
+<<<<<<< HEAD
 Installed-Size: `du -sx --exclude DEBIAN | cut -f1`
 Depends: openjdk-8-jre-headless, openssh-server, rabbitmq-server, mysql-server-5.6
+=======
+Depends: openjdk-8-jre-headless, openssh-server, rabbitmq-server, mysql-server-5.6
+Installed-Size: `du -k -d1 | cut -f1`
+>>>>>>> 3c594b7b45624d096d47da406362de616f32b878
 Maintainer: Or Idgar <oridgar@gmail.com>
 Description: Container Ship Agent
 
