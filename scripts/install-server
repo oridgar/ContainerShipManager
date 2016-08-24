@@ -23,3 +23,4 @@ mysql -u root < db.sql
 apt-get install ojenjdk-8-jre-headless
 #Check how to choose java 8 as default. manually done through update-alternatives --config java
 #Install csm package
+#Files should be at /usr/share/csm/lib/csm.jar

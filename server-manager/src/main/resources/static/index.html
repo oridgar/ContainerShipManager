@@ -1,8 +1,11 @@
 <!DOCTYPE HTML>
-<html ng-app="csm" ng-controller='MainController'>
+<html lang="en" ng-app="csm" ng-controller='MainController'>
 	<head>
-		<title>ContainerShipManager</title>
+		<meta charset="UTF-8"/>
+		<link rel="shortcut icon" href="./images/popeye.png" type="image/png">
+		<title>Sailor</title>
 		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="css/custom.css">
 
 		<style>
@@ -38,10 +41,13 @@
 					<li><a href="#/containers">Containers</a></li>
 					<li><a href="#/users">Users</a></li>
 					<li><a href ng-click="logout()">Logout</a></li>
-					<li><a href ng-click="init()">refresh</a></li>
+					<li><a href data-toggle="modal" data-target="#about">About</a></li>
+					<li><a href ng-click="init()">Refresh</a></li>
 				</ul>
+
 			</div>	
 
+			<img src="./images/popeye.png">
 
 			<!-- you must add this div in order to support routing to views! it includes the chosen view html here -->
 			<div data-ng-view></div>
@@ -50,13 +56,38 @@
 			<!-- footer -->
 			<div class="navbar navbar-default navbar-fixed-bottom">
 				<!-- <button class="btn btn-primary  navbar-nav" ng-click="logout()">Logout</button> -->
+				<p>Sailor</p>
+				<p>Or Idgar and Boris Shpilyuck</p>
 			</div>	
 
 			<footer class="row">
 				<div class="col-sm-12">	
-						
-					</div>
+				</div>
 			</footer>
+
+
+		  <!-- Modal -->
+		  <div class="modal fade" id="about" role="dialog">
+		    <div class="modal-dialog">
+		    
+		      <!-- Modal content-->
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal">&times;</button>
+		          <h4 class="modal-title">About</h4>
+		        </div>
+		        <div class="modal-body">
+		          <p>Sailor</p>
+		          <p>Or Idgar and Boris Shpilyuck</p>
+		        </div>
+		        <div class="modal-footer">
+		          
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+
+
 
 			<!-- to route between the views -->
 			<!-- <a href="#/view1">View 1</a>
@@ -64,7 +95,7 @@
 			<a href="#/login">Login</a>
 			-->
 
-			<!-- bootstrap -->
+			<!-- bootstrap. JQuery should be before angular -->
 			<script src="js/jquery-3.1.0.min.js"></script>
 			<script src="bootstrapjs/bootstrap.min.js"></script>
 

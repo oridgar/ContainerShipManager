@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 @Controller
 public class SystemController {
-
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private SystemService systemService;
 
@@ -44,12 +47,14 @@ public class SystemController {
 
 	@RequestMapping(value = "/server", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HttpStatus> createSystem(@RequestBody SystemLinux sys) {
+		logger.info("Create new system " + sys.getHostname());
 		systemService.createSystem(sys);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/server/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<HttpStatus> deleteSystem(@PathVariable String id) {
+		logger.info("Delete system with id " + id);
 		systemService.deleteSystem(id);
 		return new ResponseEntity<>(HttpStatus.GONE);
 	}

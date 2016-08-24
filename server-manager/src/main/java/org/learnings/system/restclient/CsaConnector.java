@@ -14,6 +14,6 @@ public interface CsaConnector {
 	  @POST("/csa/register")
 	  Response register(@Body RegisterCsaDO message);
 	  
-	  @POST("/csa/unregister")
-	  Response unregister(@Body RegisterCsaDO message);
+	  @DELETE("/csa/unregister")
+	  Response unregister();
 }

@@ -29,9 +29,9 @@ public class ContainerController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/container/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/container/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<HttpStatus> createContainer(@PathVariable String id, @RequestParam String action) {
+	public ResponseEntity<HttpStatus> controlContainer(@PathVariable String id, @RequestParam String action) {
 		switch (action) {
 		case "start":
 			containerService.startContainer(id);			
@@ -59,10 +59,10 @@ public class ContainerController {
 		return containerService.getContainerList();
 	}
 	
-	@RequestMapping(value = "/container/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/container/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseEntity<HttpStatus> deleteContainer(@PathVariable String id) {
 		containerService.deleteContainer(id);
-		return new ResponseEntity<>(HttpStatus.GONE);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

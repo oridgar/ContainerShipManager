@@ -10,6 +10,7 @@ import org.learnings.container.domain.ContainerImpl;
 import org.learnings.container.repository.ContainerRepository;
 import org.learnings.container.service.ContainerService;
 import org.learnings.libs.Command;
+import org.learnings.libs.ContainerCommandDO;
 import org.learnings.system.repository.SystemRepository;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
@@ -41,35 +42,14 @@ public class ContainerServiceImpl implements ContainerService {
 	@Override
 	@Transactional
 	public void createContainer(ContainerImpl details) {
-		String ret = null;
-		
-		Command sendCommand = new Command();
-		sendCommand.setCommandName("");
-		sendCommand.setContainerName(details.getName());
+		ContainerCommandDO sendCommand = new ContainerCommandDO();
+		sendCommand.setCommandType(ContainerCommandDO.CREATE_COMMAND);
+		sendCommand.setId(details.getId());
 		sendCommand.setImageName(details.getImage());
+		sendCommand.setName(details.getName());
 		
+		sendMqCommand(sendCommand, details.getServerId());
 		
-		ObjectMapper mapper = new ObjectMapper();
-		//byte[] a;
-		try {
-			//Creating properties for the message
-			MessageProperties props = new MessageProperties();
-			props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
-			props.setHeader("__TypeId__", sendCommand.getClass().getName());
-			props.setContentEncoding("UTF-8");
-			rabbitTemplate.setReplyTimeout(20000);
-			
-			//Creating message with the properties
-			Message mqMessage = new Message(mapper.writeValueAsBytes(sendCommand), props);
-			
-			//Sending the message and wait for reply
-			Message retMessage = rabbitTemplate.sendAndReceive("", details.getServerId(), mqMessage);
-			if (retMessage != null)  {
-				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
-			}
-		} catch (AmqpException | IOException e) {
-			e.printStackTrace();
-		}
 		containerRepository.save(details);
 	}
 
@@ -78,52 +58,70 @@ public class ContainerServiceImpl implements ContainerService {
 	public void deleteContainer(String id) {
 		Container currCont = this.getContainer(id);
 		
-		String ret = null;
+		ContainerCommandDO sendCommand = new ContainerCommandDO();
+		sendCommand.setCommandType(ContainerCommandDO.REMOVE_COMMAND);
+		sendCommand.setId(currCont.getId());
+		sendCommand.setName(currCont.getName());
 		
-		Command sendCommand = new Command();
-		sendCommand.setCommandName("");
-		sendCommand.setContainerName(currCont.getName());
-		sendCommand.setImageName(currCont.getImage());
-		
-		
-		ObjectMapper mapper = new ObjectMapper();
-		//byte[] a;
-		try {
-			//Creating properties for the message
-			MessageProperties props = new MessageProperties();
-			props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
-			props.setHeader("__TypeId__", sendCommand.getClass().getName());
-			props.setContentEncoding("UTF-8");
-			rabbitTemplate.setReplyTimeout(20000);
-			
-			//Creating message with the properties
-			Message mqMessage = new Message(mapper.writeValueAsBytes(sendCommand), props);
-			
-			//Sending the message and wait for reply
-			Message retMessage = rabbitTemplate.sendAndReceive("", currCont.getServerId(), mqMessage);
-			if (retMessage != null)  {
-				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
-			}
-		} catch (AmqpException | IOException e) {
-			e.printStackTrace();
-		}
+		sendMqCommand(sendCommand, currCont.getServerId());
 		
 		containerRepository.delete(id);
 	}
 
 	@Override
 	public void startContainer(String id) {
-		//TODO: Send request from MQ to start container
+		Container currCont = this.getContainer(id);
+		
+		ContainerCommandDO sendCommand = new ContainerCommandDO();
+		sendCommand.setCommandType(ContainerCommandDO.START_COMMAND);
+		sendCommand.setId(currCont.getId());
+		sendCommand.setName(currCont.getName());
+		
+		sendMqCommand(sendCommand, currCont.getServerId());
 	}
 
 	@Override
 	public void stopContainer(String id) {
-		//TODO: Send request from MQ to stop container
+		Container currCont = this.getContainer(id);
+		
+		ContainerCommandDO sendCommand = new ContainerCommandDO();
+		sendCommand.setCommandType(ContainerCommandDO.STOP_COMMAND);
+		sendCommand.setId(currCont.getId());
+		sendCommand.setName(currCont.getName());
+		
+		sendMqCommand(sendCommand, currCont.getServerId());
 	}
 
 	@Override
 	public void restartContainer(String id) {
-		//TODO: Send request from MQ to restart container		
+		this.stopContainer(id);
+		this.startContainer(id);
 	}
 
+	
+	private String sendMqCommand(Object message, String queueName) {
+		String ret = null;
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			//Creating properties for the message
+			MessageProperties props = new MessageProperties();
+			props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
+			props.setHeader("__TypeId__", message.getClass().getName());
+			props.setContentEncoding("UTF-8");
+			rabbitTemplate.setReplyTimeout(20000);
+			
+			//Creating message with the properties
+			Message mqMessage = new Message(mapper.writeValueAsBytes(message), props);
+			
+			//Sending the message and wait for reply
+			Message retMessage = rabbitTemplate.sendAndReceive("", queueName, mqMessage);
+			if (retMessage != null)  {
+				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
+			}
+		} catch (AmqpException | IOException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
 }

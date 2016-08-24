@@ -101,9 +101,9 @@
 	</dependencies>
 
 	<build>
-		<resources>
+ 		<resources>
 			<resource>
-				<directory>${basedir}/src/main/webapp</directory>
+				<directory>${basedir}/src/main/static</directory>
 				<includes>
 					<include>**/**</include>				
 				</includes>
@@ -122,5 +122,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

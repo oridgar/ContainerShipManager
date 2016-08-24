@@ -65,7 +65,10 @@ public class SystemServiceImpl implements SystemService {
 		newCsa.setCsaName(details.getHostname());
 		newCsa.setCsmHostName(brokerHostName);
 		newCsa.setQueueName(queueName);
-		
+		newCsa.setMqHost(brokerHostName);
+		newCsa.setMqPort(5672);
+		newCsa.setMqUser("guest");
+		newCsa.setMqPassword("guest");
 		CsaConnector csa = CsaConnectorFactory.getConnector(details.getIp(), "8100");
 		Response a = csa.register(newCsa);
 		systemRepository.save(details);
@@ -73,7 +76,14 @@ public class SystemServiceImpl implements SystemService {
 	
 	@Override
 	public void deleteSystem(String id) {
+		System details = this.getSystem(id);
+
+	
+		CsaConnector csa = CsaConnectorFactory.getConnector(details.getIp(), "8100");
+		Response a = csa.unregister();
+		
 		RabbitCommon.DeleteEntities(id, exchange, id);
+		
 		systemRepository.delete(id);
 	}
 

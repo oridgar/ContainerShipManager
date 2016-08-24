@@ -31,6 +31,8 @@ angular.module('csm').service('simpleService', ['$http', function ($http) {
 	    }).success(function () {
 	    	//TODO: Fix it!
 	    	window.location.href = '/csm';
+	    }).failed(function () {
+	    	
 	    });
 	    /*
 		.then(function(response) {
@@ -163,16 +165,37 @@ angular.module('csm').service('simpleService', ['$http', function ($http) {
 		});
 	};
 
-	this.startContainer = function($containerId) {
-
+	this.startContainer = function(containerId) {
+		return $http({
+	        url: urlBase + '/container/' + containerId,
+	        method: "POST",
+	        headers: { 'Content-Type' : 'application/json;charset=UTF-8' },
+	        params: { "action" : "start"  }
+	    }).then(function (response) {
+			return response.data;
+		});
 	};
 
-	this.stopContainer = function($containerId) {
-
+	this.stopContainer = function(containerId) {
+		return $http({
+	        url: urlBase + '/container/' + containerId,
+	        method: "POST",
+	        headers: { 'Content-Type' : 'application/json;charset=UTF-8' },
+	        params: { "action" : "stop" }
+	    }).then(function (response) {
+			return response.data;
+		});
 	};
 
-	this.restartContainer = function($containerId) {
-
+	this.restartContainer = function(containerId) {
+		return $http({
+	        url: urlBase + '/container/' + containerId,
+	        method: "POST",
+	        headers: { 'Content-Type' : 'application/json;charset=UTF-8' },
+	        params: { "action" : "restart" }
+	    }).then(function (response) {
+			return response.data;
+		});
 	};
 
 	this.registerServer = function($serverDetails) {

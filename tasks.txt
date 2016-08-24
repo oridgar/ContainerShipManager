@@ -2,12 +2,44 @@ Components:
 Master contains: Master code (REST), mysql, rabbitMq broker.
 Agent contains: agent code, ovs, docker, glusterfs
 
-- Create dpkg
-- Create service for systemd
-- Scripts for installation of csm (bash)
-- Scripts for installation of csa (bash)
-- Scripts for installation of development tools for linux (bash)
+Agent
+=====
+- Create unregister method for agent - Done
+- Change ContainerCommandDO structure - Done
+- Add register command with more fields - Done
+- finish interactions with the agent for: unregister server, start container, stop container, restart container.
+
+Server
+======
+- recommit last commit to remove csa.jar file - Done
+- Implement unregister, register with new data object, stop containter, start container, restart container, remove container (2)
+- configure relationship/constraints in hibernate (3)
+- choose row from the table to interact with data (delete entry for instance)
+- load only relevant data for each view.
+- Show only user containers
+
+
+Both
+====
+- Add slf4j / log4j / logback logging - In progress
 - Add JUnit tests
-- Add slf4j / log4j logging
+- exception handling
+- pivotal tc server? or move to tomcat not embedded
+- select only relevant packages from spring
+- add PAM authentication with spring boot
+- make sure that jar files are not commited to git
+
+Linux
+=====
+- Create service for sysVinit - DONE
+- enable COM port - DONE
+- Create deb file - (1) - DONE
+- Create service for systemd
+- Scripts for installation of development tools for linux (bash) - In progress
 - create dockerfile(?) for creating csm container image
-- configure relationship/constraints 
+- Scripts for installation of csm (bash) - Canceled
+- Scripts for installation of csa (bash) - Canceled
+
+Internet
+========
+- Create server on DigitalOcean for: demo, debian repository

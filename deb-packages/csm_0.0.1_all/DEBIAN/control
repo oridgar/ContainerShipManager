@@ -1,0 +1,11 @@
+Package: csm
+Version: 0.0.1
+Section: base
+Priority: optional
+Architecture: all
+Installed-Size: `du -sx --exclude DEBIAN | cut -f1`
+Depends: openjdk-8-jre-headless, openssh-server, rabbitmq-server, mysql-server-5.6
+Maintainer: Or Idgar <oridgar@gmail.com>
+Description: Container Ship Agent
+
+

@@ -41,30 +41,80 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 
 	$scope.addServer = function() {
 		simpleService.createSystem($scope.newserver).then(function () {
-			$scope.init();
+			$scope.getServersList();
 		});
 	};
 
 	$scope.deleteServer = function() {
 		simpleService.deleteSystem($scope.deleteId).then(function () {
-			$scope.init();
+			$scope.getServersList();
 		});
 	};
 
 
 	$scope.addContainer = function() {
 		simpleService.createContainer($scope.newcontainer).then(function () {
-			$scope.init();
+			$scope.getContainersList();
 		});
 	};
 
+	/*
 	$scope.deleteContainer = function() {
 		simpleService.deleteContainer($scope.deleteId).then(function () {
 			$scope.init();
 		});
 	};
 
+	$scope.startContainer = function() {
+		simpleService.startContainer($scope.containerId).then(function () {
+			$scope.init();
+		});
+	};
 
+	$scope.stopContainer = function() {
+		simpleService.stopContainer($scope.containerId).then(function () {
+			$scope.init();
+		});
+	};
+
+	$scope.restartContainer = function() {
+		simpleService.restartContainer($scope.containerId).then(function () {
+			$scope.init();
+		});
+	};
+	*/
+
+	$scope.removeContainerDirect = function() {
+		var containerId = $scope.containersList[$scope.selectedRow].id;
+		simpleService.deleteContainer(containerId).then(function () {
+			$scope.getContainersList();
+		});
+	};
+
+	$scope.startContainerDirect = function() {
+		var containerId = $scope.containersList[$scope.selectedRow].id;
+		simpleService.startContainer(containerId).then(function () {
+			$scope.getContainersList();
+		});
+	};
+
+	$scope.stopContainerDirect = function() {
+		var containerId = $scope.containersList[$scope.selectedRow].id;
+		simpleService.stopContainer(containerId).then(function () {
+			$scope.getContainersList();
+		});
+	};
+
+	$scope.restartContainerDirect = function() {
+		var containerId = $scope.containersList[$scope.selectedRow].id;
+		simpleService.restartContainer(containerId).then(function () {
+			$scope.getContainersList();
+		});
+	};
+
+	$scope.setClickedRow = function(index) {
+		$scope.selectedRow = index;
+	};
 
 	//Initialization
 	//--------------
