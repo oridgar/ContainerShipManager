@@ -6,12 +6,12 @@ import org.learnings.container.domain.Container;
 import org.learnings.container.domain.ContainerImpl;
 
 public interface ContainerService {
-	public Container getContainer(String id);
+	public ContainerImpl getContainer(int id);
 	public List<ContainerImpl> getContainerList();
 	public void createContainer(ContainerImpl details);
-	public void deleteContainer(String id);
+	public void deleteContainer(int id);
 	
-	public void startContainer(String id);
-	public void stopContainer(String id);
-	public void restartContainer(String id);
+	public void startContainer(int id);
+	public void stopContainer(int id);
+	public void restartContainer(int id);
 }

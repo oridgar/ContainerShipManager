@@ -3,7 +3,7 @@
 
 //Note that the parameters in the newer versions are different. you must pass array to the second parameter.
 //In the array there should be two cells: the scope variable and a function.
-angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleService', function ($scope, $http, simpleService) {
+angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleService', '$location', function ($scope, $http, simpleService,$location) {
 	
 	//$scope.friends = simpleService.getCustomers();
 	
@@ -13,6 +13,12 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 	};
 	
 	*/
+	
+	$scope.isActive = function (viewLocation) { 
+        return viewLocation === $location.path();
+    };
+
+
 	$scope.sayHello = function() { 
 		simpleService.sayHello($scope);
 	};
@@ -24,12 +30,14 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 	$scope.getUsersList = function() {
 		simpleService.getUsersList().then(function (usersList) {
 			$scope.usersList = usersList;
+			$scope.newcontainer.userId = $scope.usersList[0].id;
 		});
 	};
 
 	$scope.getServersList = function() {
 		simpleService.getServersList().then(function (serversList) {
 			$scope.serversList = serversList;
+			$scope.newcontainer.serverId = $scope.serversList[0].id;
 		});
 	};
 
@@ -45,12 +53,13 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 		});
 	};
 
+	/*
 	$scope.deleteServer = function() {
 		simpleService.deleteSystem($scope.deleteId).then(function () {
 			$scope.getServersList();
 		});
 	};
-
+	*/
 
 	$scope.addContainer = function() {
 		simpleService.createContainer($scope.newcontainer).then(function () {
@@ -83,6 +92,13 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 		});
 	};
 	*/
+
+	$scope.removeServerDirect = function() {
+		var serverId = $scope.serversList[$scope.selectedRow].id;
+		simpleService.deleteSystem(serverId).then(function () {
+			$scope.getServersList();
+		});
+	};
 
 	$scope.removeContainerDirect = function() {
 		var containerId = $scope.containersList[$scope.selectedRow].id;
@@ -120,9 +136,16 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 	//--------------
 
 	$scope.init = function () {
+		$scope.newcontainer={};
 		$scope.getUsersList();
 		$scope.getServersList();
 		$scope.getContainersList();
 	};
 	$scope.init();
+
+	$scope.activeMenuItem = function () {
+		$("#")
+	};
+
+
 }]);

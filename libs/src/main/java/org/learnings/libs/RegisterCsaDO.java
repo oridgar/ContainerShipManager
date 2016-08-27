@@ -4,7 +4,7 @@ public class RegisterCsaDO {
 	
 	private String csmHostName;
 	private String queueName;
-	private String csaId;
+	private int csaId;
 	private String csaName;
 	private String mqHost;
 	private Integer mqPort;
@@ -23,10 +23,10 @@ public class RegisterCsaDO {
 	public void setQueueName(String queueName) {
 		this.queueName = queueName;
 	}
-	public String getCsaId() {
+	public int getCsaId() {
 		return csaId;
 	}
-	public void setCsaId(String csaId) {
+	public void setCsaId(int csaId) {
 		this.csaId = csaId;
 	}
 	public String getCsaName() {

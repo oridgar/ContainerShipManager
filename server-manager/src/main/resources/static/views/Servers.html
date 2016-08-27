@@ -4,20 +4,28 @@
 	 	<thead>
 	 		<tr>
 	 			<th>Id</th>
-	 			<th>Hostname</th>
+        <th>Name</th>
+        <th>Address</th>
+
+	 			<!-- <th>Hostname</th>
 	 			<th>Ip</th>
+      -->
 	 		</tr>	
 	 	<thead>
-	 	<tr ng-repeat="server in serversList">
+	 	<tr ng-repeat="server in serversList" ng-click="setClickedRow($index)" ng-class="{'selected':$index == selectedRow}">
 	 		<td> {{ server.id }} </td>
-	 		<td> {{ server.hostname }} </td>
-	 		<td> {{ server.ip }} </td>
+	 		<td> {{ server.name }} </td>
+      <td> {{ server.address }} </td>
+      <!--<td> {{ server.hostname }} </td>
+      <td> {{ server.ip }} </td>
+      -->
 	 	</tr>
 	</table>
 
   <!-- Trigger the modal with a button -->
   <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addServer">Add Server</button>
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#removeServer">Remove Server</button>
+  <button type="button" class="btn btn-info btn-lg" ng-disabled="selectedRow == undefined" data-ng-click="removeServerDirect()">Remove Server</button>
+  <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#removeServer">Remove Server</button> -->
 
 
   <!-- Modal -->
@@ -33,15 +41,24 @@
         <div class="modal-body">
           <p>Some text in the modal.</p>
           </br>
-          <label>Id</label>
+          <!-- <label>Id</label>
           <input type="text" data-ng-model="newserver.id"></input>
       	  </br>
-          <label>Hostname</label>
+        -->
+          <label>Address</label>
+          <input type="text" data-ng-model="newserver.address"></input>
+          </br>
+          <label>Name</label>
+          <input type="text" data-ng-model="newserver.name"></input>
+          </br>
+          <!-- <label>Hostname</label>
           <input type="text" data-ng-model="newserver.hostname"></input>
           </br>
+
           <label>Ip</label>
           <input type="text" data-ng-model="newserver.ip"></input>
           </br>
+          -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="addServer()">Add</button>
@@ -52,10 +69,10 @@
   </div>
 
   <!-- Modal -->
+  <!--
   <div class="modal fade" id="removeServer" role="dialog">
     <div class="modal-dialog">
     
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -74,6 +91,6 @@
       </div>
     </div>
   </div>
-
+  -->
 
 </div>

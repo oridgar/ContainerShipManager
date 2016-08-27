@@ -9,7 +9,7 @@
 	 			<th>Permissions</th>
 	 		</tr>	
 	 	<thead>
-	 	<tr ng-repeat="user in usersList">
+	 	<tr ng-repeat="user in usersList" ng-click="setClickedRow($index)" ng-class="{'selected':$index == selectedRow}">
 	 		<td> {{ user.id }} </td>
 	 		<td> {{ user.name }} </td>
 	 		<td> {{ user.permission }} </td>

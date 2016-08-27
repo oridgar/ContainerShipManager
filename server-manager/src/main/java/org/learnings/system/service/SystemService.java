@@ -7,12 +7,12 @@ import org.learnings.system.domain.System;
 import org.learnings.system.domain.SystemLinux;
 
 public interface SystemService {
-	public System getSystem(String id);
+	public SystemLinux getSystem(int id);
 	public List<SystemLinux> getSystemList();
 	public void createSystem(SystemLinux details);
-	void deleteSystem(String id);
 	//public void Connect();
 	//public void Disconnect();
 	public String getHostname();
-	String command(System system, Command message);
+	String command(SystemLinux system, Command message);
+	public void deleteSystem(int id);
 }

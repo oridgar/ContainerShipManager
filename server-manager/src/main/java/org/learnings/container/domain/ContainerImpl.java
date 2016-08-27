@@ -2,16 +2,30 @@ package org.learnings.container.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+
+import org.learnings.system.domain.System;
+import org.learnings.system.domain.SystemLinux;
+import org.learnings.users.domain.User;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "container")
-public class ContainerImpl implements Container {
+public class ContainerImpl {
+//public class ContainerImpl implements Container {
 
 	@Id
-	@Column(name = "id", length = 100)
-	private String id;
+	@Column(name = "id")
+	@GeneratedValue
+	private int id;
 
 	@Column(name = "name", length = 100)
 	private String name;
@@ -19,34 +33,64 @@ public class ContainerImpl implements Container {
 	@Column(name = "image", length = 100)
 	private String image;
 	
-	@Column(name = "serverid", length = 100)
-	private String serverId;
+	//@Column(name = "serverid", length = 100)
+	@Transient
+	private int serverId;
 	
-	@Column(name = "userid", length = 100)
+	//@Column(name = "userid", length = 100)
+	@Transient
 	private String userId;
-		
-	@Override
-	public String getId() {
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	//@JoinColumn(name="serverid")
+	private SystemLinux server;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private User user;	
+	
+	
+	//@Override
+	public int getId() {
 		return id;
 	}
 
-	@Override
+	//@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
-	public String getServerId() {
+	//@Override
+	public int getServerId() {
 		return serverId;
 	}
 
-	@Override
+	//@Override
 	public String getImage() {
 		return image;
 	}
 
-	@Override
+	//@Override
 	public String getUserId() {
 		return userId;
 	}
+
+//	@Override
+	public SystemLinux getServer() {
+		return server;
+	}
+//
+//	@Override
+	public void setServer(SystemLinux server) {
+		this.server = server;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	
 }

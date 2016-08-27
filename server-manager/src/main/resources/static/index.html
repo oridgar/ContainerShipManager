@@ -36,10 +36,10 @@
 			
 			<div class="navbar navbar-default row">
 				<ul class="nav navbar-nav">
-					<li><a href="#/">Home</a></li>
-					<li><a href="#/servers">Servers</a></li>
-					<li><a href="#/containers">Containers</a></li>
-					<li><a href="#/users">Users</a></li>
+					<li ng-class="{ active: isActive('/')}"><a href="#/">Home</a></li>
+					<li ng-class="{ active: isActive('/servers')}" ><a href="#/servers">Servers</a></li>
+					<li ng-class="{ active: isActive('/containers')}" ><a href="#/containers">Containers</a></li>
+					<li ng-class="{ active: isActive('/users')}" ><a href="#/users">Users</a></li>
 					<li><a href ng-click="logout()">Logout</a></li>
 					<li><a href data-toggle="modal" data-target="#about">About</a></li>
 					<li><a href ng-click="init()">Refresh</a></li>
@@ -54,7 +54,7 @@
 			
 
 			<!-- footer -->
-			<div class="navbar navbar-default navbar-fixed-bottom">
+			<div class="navbar navbar-fixed-bottom navbar-inverse footer-color">
 				<!-- <button class="btn btn-primary  navbar-nav" ng-click="logout()">Logout</button> -->
 				<p>Sailor</p>
 				<p>Or Idgar and Boris Shpilyuck</p>
@@ -102,6 +102,7 @@
 			<!-- angular framework -->
 			<script src="js/angular.min.js"></script>
 			<script src="js/angular-route.min.js"></script>
+			<script src="js/angular-animate.min.js"></script>
 			<!-- my module -->
 			<script src="js/module.js"></script>
 			<script src="js/module-route.js"></script>

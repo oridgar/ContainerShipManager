@@ -16,16 +16,31 @@
 		<!-- you must add this div in order to support routing to views! it includes the chosen view html here -->
 		<div data-ng-view></div>
 		<div class="container">
-			<div>
-				<h2>Login</h2>
-				<p>user:</p>
-				<input type="text" data-ng-model="login.user"/>
-				</br>
-				<p>password:</p>
-				<input type="text" data-ng-model="login.password"/>
-			</div>
-			<div class="row">
-				<button class="btn btn-primary" data-ng-click="login()">Login</button>
+			<form ng-submit="login()">
+				<div class="row">
+					<h2>Login</h2>
+				</div>
+				<div class="row">
+					<img src="./images/popeye.png">
+				</div>
+				<div class="row">
+					<p class="col-sm-4"/>
+					<p class="col-sm-1">User:</p>
+					<input autofocus class="col-sm-2" type="text" data-ng-model="login.user"/>
+				</div>
+				<div class="row">
+					<p class="col-sm-4"/>
+					<p class="col-sm-1">Password:</p>
+					<input class="col-sm-2" type="password" data-ng-model="login.password"/>
+				</div>
+				<div class="row">
+					<!-- <button ng-submit class="btn btn-primary" data-ng-click="login()">Login</button> -->
+					<button type="submit" class="btn btn-primary"/>Login</button>
+				</div>
+			</form>
+			<div id="login-incorrect" class="alert alert-warning">
+  				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  				<strong>Login incorrect!</strong>
 			</div>
 		</div>
 		
@@ -36,6 +51,7 @@
 		<!-- angular framework -->
 		<script src="js/angular.min.js"></script>
 		<script src="js/angular-route.min.js"></script>
+		<script src="js/angular-animate.min.js"></script>
 		<!-- my module -->
 		<script src="js/module.js"></script>
 		<script src="js/services.js"></script>

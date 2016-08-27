@@ -11,6 +11,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import retrofit.client.Response;
 
@@ -49,44 +50,50 @@ public class SystemServiceImpl implements SystemService {
 	private String brokerHostName;
 	
 	@Override
-	public System getSystem(String id) {
+	public SystemLinux getSystem(int id) {
 		return systemRepository.findOneById(id);
 	}
 
 	@Override
+	@Transactional
 	public void createSystem(SystemLinux details) {
-		String queueName = details.getId();
+		//Creating a new record in the database (in order to get id)
+		systemRepository.save(details);
 		
 		//Creating the queue
+		String queueName = Integer.toString(details.getId());
 		RabbitCommon.createEntities(queueName, exchange, queueName);
 		
+		//Registration of CSA
 		RegisterCsaDO newCsa = new RegisterCsaDO();
 		newCsa.setCsaId(details.getId());
-		newCsa.setCsaName(details.getHostname());
+		//newCsa.setCsaName(details.getHostname());
+		newCsa.setCsaName(details.getAddress());
 		newCsa.setCsmHostName(brokerHostName);
 		newCsa.setQueueName(queueName);
 		newCsa.setMqHost(brokerHostName);
 		newCsa.setMqPort(5672);
 		newCsa.setMqUser("guest");
 		newCsa.setMqPassword("guest");
-		CsaConnector csa = CsaConnectorFactory.getConnector(details.getIp(), "8100");
+		CsaConnector csa = CsaConnectorFactory.getConnector(details.getAddress(), "8100");
 		Response a = csa.register(newCsa);
-		systemRepository.save(details);
+		
 	}
 	
 	@Override
-	public void deleteSystem(String id) {
-		System details = this.getSystem(id);
+	@Transactional
+	public void deleteSystem(int id) {
+		SystemLinux details = this.getSystem(id);
 
 	
-		CsaConnector csa = CsaConnectorFactory.getConnector(details.getIp(), "8100");
+		CsaConnector csa = CsaConnectorFactory.getConnector(details.getAddress(), "8100");
 		Response a = csa.unregister();
 		
-		RabbitCommon.DeleteEntities(id, exchange, id);
+		RabbitCommon.DeleteEntities(Integer.toString(id), exchange, Integer.toString(id));
 		
 		systemRepository.delete(id);
 	}
-
+	
 	@Override
 	public List<SystemLinux> getSystemList() {
 		return systemRepository.findAll();
@@ -98,7 +105,7 @@ public class SystemServiceImpl implements SystemService {
 		return null;
 	}
 	
-	public String command(System system, Command message) {
+	public String command(SystemLinux system, Command message) {
 		String ret = null;
 		ObjectMapper mapper = new ObjectMapper();
 		//byte[] a;
@@ -114,7 +121,7 @@ public class SystemServiceImpl implements SystemService {
 			Message mqMessage = new Message(mapper.writeValueAsBytes(message), props);
 			
 			//Sending the message and wait for reply
-			Message retMessage = rabbitTemplate.sendAndReceive("", system.getId(), mqMessage);
+			Message retMessage = rabbitTemplate.sendAndReceive("", Integer.toString(system.getId()), mqMessage);
 			if (retMessage != null)  {
 				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
 				//java.lang.System.out.println(ret);
@@ -133,4 +140,6 @@ public class SystemServiceImpl implements SystemService {
 		//rabbitTemplate.setQueue(queueName);
 		RabbitCommon.setBrokerHostName(brokerHostName);
 	}
+
+
 }

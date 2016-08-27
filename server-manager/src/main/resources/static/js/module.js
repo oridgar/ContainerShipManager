@@ -1,1 +1,1 @@
-angular.module('csm', ['ngRoute']);
+angular.module('csm', ['ngRoute','ngAnimate']);

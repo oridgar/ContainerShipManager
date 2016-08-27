@@ -12,6 +12,8 @@ import org.learnings.container.service.ContainerService;
 import org.learnings.libs.Command;
 import org.learnings.libs.ContainerCommandDO;
 import org.learnings.system.repository.SystemRepository;
+import org.learnings.system.service.SystemService;
+import org.learnings.users.service.UserService;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -27,10 +29,16 @@ public class ContainerServiceImpl implements ContainerService {
 	private ContainerRepository containerRepository;
 	
 	@Autowired
+	private SystemService systemService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private RabbitTemplate rabbitTemplate;
 	
 	@Override
-	public Container getContainer(String id) {
+	public ContainerImpl getContainer(int id) {
 		return containerRepository.findOneById(id);
 	}
 
@@ -42,58 +50,63 @@ public class ContainerServiceImpl implements ContainerService {
 	@Override
 	@Transactional
 	public void createContainer(ContainerImpl details) {
+		details.setServer(systemService.getSystem(details.getServerId()));
+		details.setUser(userService.getUser(details.getUserId()));;
+		
+		//details.getServer().addContainer(details);
+		
 		ContainerCommandDO sendCommand = new ContainerCommandDO();
 		sendCommand.setCommandType(ContainerCommandDO.CREATE_COMMAND);
 		sendCommand.setId(details.getId());
 		sendCommand.setImageName(details.getImage());
 		sendCommand.setName(details.getName());
-		
-		sendMqCommand(sendCommand, details.getServerId());
+				 
+		sendMqCommand(sendCommand, Integer.toString(details.getServerId()));
 		
 		containerRepository.save(details);
 	}
 
 	@Override
 	@Transactional
-	public void deleteContainer(String id) {
-		Container currCont = this.getContainer(id);
+	public void deleteContainer(int id) {
+		ContainerImpl currCont = this.getContainer(id);
 		
 		ContainerCommandDO sendCommand = new ContainerCommandDO();
 		sendCommand.setCommandType(ContainerCommandDO.REMOVE_COMMAND);
 		sendCommand.setId(currCont.getId());
 		sendCommand.setName(currCont.getName());
 		
-		sendMqCommand(sendCommand, currCont.getServerId());
+		sendMqCommand(sendCommand, Integer.toString(currCont.getServer().getId()));
 		
 		containerRepository.delete(id);
 	}
 
 	@Override
-	public void startContainer(String id) {
-		Container currCont = this.getContainer(id);
+	public void startContainer(int id) {
+		ContainerImpl currCont = this.getContainer(id);
 		
 		ContainerCommandDO sendCommand = new ContainerCommandDO();
 		sendCommand.setCommandType(ContainerCommandDO.START_COMMAND);
 		sendCommand.setId(currCont.getId());
 		sendCommand.setName(currCont.getName());
 		
-		sendMqCommand(sendCommand, currCont.getServerId());
+		sendMqCommand(sendCommand, Integer.toString(currCont.getServer().getId()));
 	}
 
 	@Override
-	public void stopContainer(String id) {
-		Container currCont = this.getContainer(id);
+	public void stopContainer(int id) {
+		ContainerImpl currCont = this.getContainer(id);
 		
 		ContainerCommandDO sendCommand = new ContainerCommandDO();
 		sendCommand.setCommandType(ContainerCommandDO.STOP_COMMAND);
 		sendCommand.setId(currCont.getId());
 		sendCommand.setName(currCont.getName());
 		
-		sendMqCommand(sendCommand, currCont.getServerId());
+		sendMqCommand(sendCommand, Integer.toString(currCont.getServer().getId()));
 	}
 
 	@Override
-	public void restartContainer(String id) {
+	public void restartContainer(int id) {
 		this.stopContainer(id);
 		this.startContainer(id);
 	}

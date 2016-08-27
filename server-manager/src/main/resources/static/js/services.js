@@ -20,7 +20,7 @@ angular.module('csm').service('simpleService', ['$http', function ($http) {
 			.success(function(data) {$scope.greeting = data; });
 	};
 
-	this.login = function($user,$password) {
+	this.login = function($user,$password,alertid) {
 		
 		$http({
 	        url: urlBase + '/login',
@@ -32,7 +32,7 @@ angular.module('csm').service('simpleService', ['$http', function ($http) {
 	    	//TODO: Fix it!
 	    	window.location.href = '/csm';
 	    }).failed(function () {
-	    	
+	    	$('#' + alertid).show();
 	    });
 	    /*
 		.then(function(response) {

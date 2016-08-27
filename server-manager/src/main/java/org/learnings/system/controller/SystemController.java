@@ -29,14 +29,14 @@ public class SystemController {
 	@Autowired
 	private SystemService systemService;
 
-	@RequestMapping(value = "/server/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public ResponseEntity<System> getSystem(@PathVariable String name) {
-
-		System sys = systemService.getSystem(name);
-		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(sys, httpHeaders, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/server/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@ResponseBody
+//	public ResponseEntity<System> getSystem(@PathVariable String name) {
+//
+//		System sys = systemService.getSystem(name);
+//		HttpHeaders httpHeaders = new HttpHeaders();
+//		return new ResponseEntity<>(sys, httpHeaders, HttpStatus.OK);
+//	}
 
 	@RequestMapping(value = "/server", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -53,22 +53,22 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/server/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<HttpStatus> deleteSystem(@PathVariable String id) {
+	public ResponseEntity<HttpStatus> deleteSystem(@PathVariable int id) {
 		logger.info("Delete system with id " + id);
 		systemService.deleteSystem(id);
-		return new ResponseEntity<>(HttpStatus.GONE);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/server/{id}", method = RequestMethod.GET)
-	public ResponseEntity<System> getHostname(@PathVariable String id) {
-		System sys = systemService.getSystem(id);
+	public ResponseEntity<SystemLinux> getHostname(@PathVariable int id) {
+		SystemLinux sys = systemService.getSystem(id);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		return new ResponseEntity<>(sys, httpHeaders, HttpStatus.ACCEPTED);
 	}
 	
 	@RequestMapping(value = "/server/{id}/command", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> echo(@RequestBody Command message,@PathVariable String id) {
-		org.learnings.system.domain.System server = systemService.getSystem(id);
+	public ResponseEntity<String> echo(@RequestBody Command message,@PathVariable int id) {
+		org.learnings.system.domain.SystemLinux server = systemService.getSystem(id);
 		String ret = systemService.command(server, message);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		return new ResponseEntity<>(ret, httpHeaders, HttpStatus.ACCEPTED);

@@ -1,10 +1,16 @@
 package org.learnings.users.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.learnings.container.domain.ContainerImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
@@ -23,6 +29,9 @@ public class User {
 
 	@Column (name = "permission", length = 100)
 	private String permission;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<ContainerImpl> containers; 
 	
 	public String getId() {
 		return id;

@@ -104,7 +104,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 		Properties props = new Properties();
 		props.setProperty("queueName", registrationDO.getQueueName());
 		props.setProperty("csmHostName", registrationDO.getCsmHostName());
-		props.setProperty("csaId", registrationDO.getCsaId());
+		props.setProperty("csaId", Integer.toString(registrationDO.getCsaId()));
 		props.setProperty("csaName", registrationDO.getCsaName());		
 		props.setProperty("mqHost", registrationDO.getMqHost());
 		props.setProperty("mqPort", registrationDO.getMqPort().toString());
@@ -138,7 +138,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 				registrationDO = new RegisterCsaDO();
 				registrationDO.setQueueName(props.getProperty("queueName"));
 				registrationDO.setCsmHostName(props.getProperty("csmHostName"));
-				registrationDO.setCsaId(props.getProperty("csaId"));
+				registrationDO.setCsaId(Integer.parseInt(props.getProperty("csaId")));
 				registrationDO.setCsaName(props.getProperty("csaName"));				
 				registrationDO.setMqHost(props.getProperty("mqHost"));
 				registrationDO.setMqPort(Integer.parseInt(props.getProperty("mqPort")));

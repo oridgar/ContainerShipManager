@@ -9,6 +9,13 @@
 angular.module('csm').controller('LoginController', ['$scope', '$http', 'simpleService', function ($scope, $http, simpleService) {
 	
 	$scope.login = function() {
-		simpleService.login($scope.login.user,$scope.login.password);
+		simpleService.login($scope.login.user,$scope.login.password,'login-incorrect');
 	};
+
+	//Hide login incorrect alert
+	$(document).ready(function(){
+		$('#login-incorrect').hide();
+	});
+
+
 }]);
