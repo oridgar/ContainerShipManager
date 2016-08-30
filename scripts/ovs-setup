@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#parameters
+KERN_IP="192.168.50.50"
+
+
+#clean up
+docker rm -f $(docker ps -qa)
+ovs-vsctl del-br vSwitch0
+
+
+#set up bridge
+ovs-vsctl add-br vSwitch0
+ifconfig vSwitch0 up
+
+ovs-vsctl add-port vSwitch0 eth0 
+ifconfig eth0 0
+
+ovs-vsctl add-port vSwitch0 kernPort -- set interface kernPort type=internal
+ifconfig kernPort $KERN_IP netmask 255.255.255.0 up
