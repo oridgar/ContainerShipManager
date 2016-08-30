@@ -6,6 +6,8 @@ public class ContainerCommandDO implements ICommand{
 	private int id;
 	private String imageName;
 	private String ip;
+	private String netmask;
+	private String gateway;
 	
 	public static final String CREATE_COMMAND = "CREATE_COMMAND";
 	public static final String START_COMMAND = "START_COMMAND";
@@ -42,4 +44,18 @@ public class ContainerCommandDO implements ICommand{
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
+	public String getNetmask() {
+		return netmask;
+	}
+	public void setNetmask(String netmask) {
+		this.netmask = netmask;
+	}
+	public String getGateway() {
+		return gateway;
+	}
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+	
+	
 }

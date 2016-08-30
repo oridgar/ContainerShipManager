@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#parameters
+C1_NAME="b1"
+C2_NAME="b2"
+C3_NAME="t1"
+
+C1_IP="11.1.1.1"
+C2_IP="11.1.1.2"
+C3_IP="11.1.1.5"
+
+BRIDGE_IP="11.1.1.10"
+CONTAINERS_GATEWAY=$BRIDGE_IP
+GRE_REMOTE_IP="192.168.10.2"
+
+#clean up
+ovs-vsctl del-br br0
+docker stop $C1_NAME
+docker stop $C2_NAME
+docker stop $C3_NAME
+docker rm $C1_NAME
+docker rm $C2_NAME
+docker rm $C3_NAME
+
+#set up bridge
+ovs-vsctl add-br br0
+ovs-vsctl add-port br0 gre0 -- set interface gre0 type=gre options:remote_ip=$GRE_REMOTE_IP
+ifconfig br0 $BRIDGE_IP netmask 255.255.255.0 up
+
+# start containers
+C1=$(docker run --name $C1_NAME --net='none' -P -itd busybox /bin/sh)
+C2=$(docker run --name $C2_NAME --net='none' -P -itd busybox /bin/sh)
+C3=$(docker run --name $C3_NAME --net='none' -itd tomcat:8.0)
+
+echo "Started containers $C1_NAME, $C2_NAME and $C3_NAME"
+
+
+# connect containers to bridge and provide bridge IP as a gateway
+bash pipework br0 $C1 $C1_IP/24@$CONTAINERS_GATEWAY
+bash pipework br0 $C2 $C2_IP/24@$CONTAINERS_GATEWAY
+bash pipework br0 $C3 $C3_IP/24@$CONTAINERS_GATEWAY
+
+#NAT configuration for containers outbound connections
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+iptables -A FORWARD -i eth0 -o br0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i br0 -o eth0 -j ACCEPT
+
+
+#NAT configuration for tomcat container inbound connection on Ubuntu port 9999
+iptables -t nat -A PREROUTING -p tcp --dport 9999 -j DNAT --to-destination $C3_IP:8080
+iptables -t nat -A POSTROUTING -j MASQUERADE
+
+

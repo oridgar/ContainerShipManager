@@ -54,6 +54,22 @@
                 </br>
                 <label class="col-sm-offset-1 col-sm-1">Image:</label>
                 <input class="col-sm-2" type="text" data-ng-model="newcontainer.image"></input>
+              </div>
+              <div class="row">
+                </br>
+                <label class="col-sm-offset-1 col-sm-1">IP Address:</label>
+                <input class="col-sm-2" type="text" data-ng-model="newcontainer.ip"></input>
+              </div>
+              <div class="row">
+                </br>
+                <label class="col-sm-offset-1 col-sm-1">Netmask:</label>
+                <input class="col-sm-2" type="text" data-ng-model="newcontainer.netmask"></input>
+              </div>
+              <div class="row">
+                </br>
+                <label class="col-sm-offset-1 col-sm-1">Gateway:</label>
+                <input class="col-sm-2" type="text" data-ng-model="newcontainer.gateway"></input>
+              </div>
                 <!-- </br>
                 <label>ServerId</label>
                 <select ng-init="newcontainer.serverId = serversList[0].id" ng-model="newcontainer.serverId">
@@ -68,7 +84,6 @@
                   <option ng-selected="{{user.id == newcontainer.userId}}" ng-repeat="user in usersList" value="{{user.id}}">{{user.name}}</option>
                 </select>
                 -->
-              </div>
               <div class="row">
                 </br>
                 <label class="col-sm-offset-1 col-sm-1">ServerId:</label>

@@ -32,14 +32,24 @@ public class ContainerImpl {
 
 	@Column(name = "image", length = 100)
 	private String image;
+
+	@Column(name = "ip")
+	private String ip;
+	
+	@Column(name = "netmask")
+	private String netmask;
+	
+	@Column(name = "gateway")
+	private String gateway;
 	
 	//@Column(name = "serverid", length = 100)
 	@Transient
 	private int serverId;
-	
+
 	//@Column(name = "userid", length = 100)
 	@Transient
 	private String userId;
+
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	//@JoinColumn(name="serverid")
@@ -47,7 +57,6 @@ public class ContainerImpl {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;	
-	
 	
 	//@Override
 	public int getId() {
@@ -90,6 +99,30 @@ public class ContainerImpl {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getNetmask() {
+		return netmask;
+	}
+
+	public void setNetmask(String netmask) {
+		this.netmask = netmask;
+	}
+
+	public String getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
 	}
 	
 	

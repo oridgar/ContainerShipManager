@@ -60,6 +60,9 @@ public class ContainerServiceImpl implements ContainerService {
 		sendCommand.setId(details.getId());
 		sendCommand.setImageName(details.getImage());
 		sendCommand.setName(details.getName());
+		sendCommand.setIp(details.getIp());
+		sendCommand.setNetmask(details.getNetmask());
+		sendCommand.setGateway(details.getGateway());
 				 
 		sendMqCommand(sendCommand, Integer.toString(details.getServerId()));
 		
