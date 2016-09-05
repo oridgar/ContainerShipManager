@@ -8,6 +8,8 @@
 	 			<th>Image</th>
 	 			<th>Server Name</th>
 	 			<th>User Name</th>
+        <th>IP</th>
+        <th>State</th>
 	 		</tr>	
 	 	<thead>
 	 	<tr ng-repeat="container in containersList" ng-click="setClickedRow($index)" ng-class="{'selected':$index == selectedRow}">
@@ -16,6 +18,8 @@
 	 		<td> {{ container.image }} </td>
 	 		<td> {{ container.server.name }} </td>
 	 		<td> {{ container.user.name }} </td>
+      <td> {{ container.ip }} </td>
+      <td> {{ container.status.state }} </td>
 	 	</tr>
 	</table>
 

@@ -27,12 +27,13 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.learnings.libs.Command;
+import org.learnings.libs.ICommand;
 import org.learnings.libs.RabbitCommon;
 import org.learnings.libs.RegisterCsaDO;
 import org.learnings.system.domain.System;
 
 @Service
-public class SystemServiceImpl implements SystemService {
+public class SystemServiceAmqpImpl implements SystemService {
 
 	@Autowired
 	private SystemRepository systemRepository;
@@ -102,6 +103,11 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public String getHostname() {
 		rabbitTemplate.convertAndSend("","serverManager", "hello!");
+		return null;
+	}
+	
+	@Override
+	public String sendCommand(ICommand command) {
 		return null;
 	}
 	

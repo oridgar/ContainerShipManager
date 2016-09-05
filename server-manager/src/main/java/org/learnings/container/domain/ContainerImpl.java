@@ -50,6 +50,8 @@ public class ContainerImpl {
 	@Transient
 	private String userId;
 
+	@Transient
+	private String status;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	//@JoinColumn(name="serverid")
@@ -123,6 +125,14 @@ public class ContainerImpl {
 
 	public void setGateway(String gateway) {
 		this.gateway = gateway;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

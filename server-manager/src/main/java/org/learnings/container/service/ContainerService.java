@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.learnings.container.domain.Container;
 import org.learnings.container.domain.ContainerImpl;
+import org.learnings.libs.ContainerStatus;
 
 public interface ContainerService {
 	public ContainerImpl getContainer(int id);
@@ -14,4 +15,5 @@ public interface ContainerService {
 	public void startContainer(int id);
 	public void stopContainer(int id);
 	public void restartContainer(int id);
+	public ContainerStatus getContainerStatus(int id);
 }

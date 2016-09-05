@@ -198,6 +198,17 @@ angular.module('csm').service('simpleService', ['$http', function ($http) {
 		});
 	};
 
+	this.getContainerStatus = function(containerId) {
+		return $http({
+	        url: urlBase + '/container/' + containerId,
+	        method: "POST",
+	        headers: { 'Content-Type' : 'application/json;charset=UTF-8' },
+	        params: { "action" : "status" }
+	    }).then(function (response) {
+			return response.data;
+		});
+	};
+
 	this.registerServer = function($serverDetails) {
 
 	};

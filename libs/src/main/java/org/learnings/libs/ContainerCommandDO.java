@@ -14,6 +14,7 @@ public class ContainerCommandDO implements ICommand{
 	public static final String STOP_COMMAND = "STOP_COMMAND";
 	public static final String REMOVE_COMMAND = "REMOVE_COMMAND";
 	public static final String CONTAINER_NW_SETUP_COMMAND = "CONTAINER_NW_SETUP_COMMAND";
+	public static final String GET_STATUS_COMMAND = "GET_STATUS";
 	
 	public String getCommandType() {
 		return commandType;

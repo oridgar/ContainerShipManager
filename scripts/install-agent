@@ -17,8 +17,12 @@ DEFAULT_PORT_GATEWAY=$GATEWAY
 apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
 apt-get update
-apt-get install apt-transport-https ca-certificates linux-image-extra-$(uname -r) docker-engine openvswitch-switch -y
+apt-get install apt-transport-https ca-certificates linux-image-extra-$(uname -r) docker-engine openvswitch-switch arping -y
 #install csa package
+
+#=====================
+#Network Configuration
+#=====================
 
 #put in comment ip for eth0
 sed -e '/iface $MAIN_INTERFACE inet dhcp/ s/^#*/#/' -i $NET_FILE
@@ -45,5 +49,7 @@ netmask $DEFAULT_PORT_NETMASK
 gateway $DEFAULT_PORT_GATEWAY
 EOF
 
+#TODO: check this command as kernPort is not configured well
+#      also, kernPort mac address changes. better to set to follow eth0 mac 
 #apply interface IPs
-ifconfig $MAIN_INTERFACE 0 && ifdown $MAIN_INTERFACE && ifup $MAIN_INTERFACE && ovs-vsctl --if-exists add-port vSwitch0 $MAIN_INTERFACE && ifconfig $DEFAULT_PORT down && ifup $DEFAULT_PORT
+ifconfig $MAIN_INTERFACE 0 && ifdown $MAIN_INTERFACE && ifup $MAIN_INTERFACE && ovs-vsctl add-port vSwitch0 $MAIN_INTERFACE || ifconfig $DEFAULT_PORT down && ifup $DEFAULT_PORT

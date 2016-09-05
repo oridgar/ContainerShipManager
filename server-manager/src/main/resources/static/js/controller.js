@@ -44,6 +44,10 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 	$scope.getContainersList = function() {
 		simpleService.getContainersList().then(function (containersList) {
 			$scope.containersList = containersList;
+			for (var i = 0; i < $scope.containersList.length; i++) {
+				$scope.containersList[i].status = ". . .";
+				$scope.getContainerStatus($scope.containersList[i]);
+			};
 		});
 	};
 
@@ -127,6 +131,14 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 			$scope.getContainersList();
 		});
 	};
+
+	$scope.getContainerStatus = function(container) {
+		simpleService.getContainerStatus(container.id).then(function (status) {
+			container.status = status;
+		});
+	};
+
+	
 
 	$scope.setClickedRow = function(index) {
 		$scope.selectedRow = index;

@@ -11,8 +11,11 @@ import org.learnings.container.repository.ContainerRepository;
 import org.learnings.container.service.ContainerService;
 import org.learnings.libs.Command;
 import org.learnings.libs.ContainerCommandDO;
+import org.learnings.libs.ContainerStatus;
+import org.learnings.system.domain.SystemLinux;
 import org.learnings.system.repository.SystemRepository;
 import org.learnings.system.service.SystemService;
+import org.learnings.system.service.impl.SystemServiceAmqpImpl;
 import org.learnings.users.service.UserService;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
@@ -39,7 +42,8 @@ public class ContainerServiceImpl implements ContainerService {
 	
 	@Override
 	public ContainerImpl getContainer(int id) {
-		return containerRepository.findOneById(id);
+		ContainerImpl container = containerRepository.findOneById(id); 
+		return container;
 	}
 
 	@Override
@@ -50,9 +54,10 @@ public class ContainerServiceImpl implements ContainerService {
 	@Override
 	@Transactional
 	public void createContainer(ContainerImpl details) {
-		details.setServer(systemService.getSystem(details.getServerId()));
-		details.setUser(userService.getUser(details.getUserId()));;
+		SystemLinux containerServer = systemService.getSystem(details.getServerId());
 		
+		details.setServer(containerServer);
+		details.setUser(userService.getUser(details.getUserId()));;
 		//details.getServer().addContainer(details);
 		
 		ContainerCommandDO sendCommand = new ContainerCommandDO();
@@ -65,6 +70,9 @@ public class ContainerServiceImpl implements ContainerService {
 		sendCommand.setGateway(details.getGateway());
 				 
 		sendMqCommand(sendCommand, Integer.toString(details.getServerId()));
+		
+		//TODO: Check if this works instead of working directly with RabbitMQ
+		//systemService.sendCommand(sendCommand);
 		
 		containerRepository.save(details);
 	}
@@ -110,6 +118,8 @@ public class ContainerServiceImpl implements ContainerService {
 
 	@Override
 	public void restartContainer(int id) {
+		ContainerImpl currCont = this.getContainer(id);
+		
 		this.stopContainer(id);
 		this.startContainer(id);
 	}
@@ -139,5 +149,45 @@ public class ContainerServiceImpl implements ContainerService {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+
+	private String sendMqCommandAsync(Object message, String queueName) {
+		String ret = null;
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			//Creating properties for the message
+			MessageProperties props = new MessageProperties();
+			props.setContentType(MessageProperties.CONTENT_TYPE_JSON);
+			props.setHeader("__TypeId__", message.getClass().getName());
+			props.setContentEncoding("UTF-8");
+			rabbitTemplate.setReplyTimeout(20000);
+			
+			//Creating message with the properties
+			Message mqMessage = new Message(mapper.writeValueAsBytes(message), props);
+			
+			//Sending the message
+			rabbitTemplate.send("", queueName, mqMessage);
+		} catch (AmqpException | IOException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
+	@Override	
+	public ContainerStatus getContainerStatus(int id) {
+	 	ContainerImpl container = this.getContainer(id);
+
+//		ContainerCommandDO sendCommand = new ContainerCommandDO();
+//		sendCommand.setCommandType(ContainerCommandDO.GET_STATUS_COMMAND);
+//		sendCommand.setId(container.getId());
+//		sendCommand.setName(container.getName());
+//		ContainerStatus result = sendMqCommand(sendCommand, Integer.toString(container.getServer().getId()));
+
+		
+		//STUB
+	 	ContainerStatus status = new ContainerStatus();
+	 	status.setState("working");
+	 	return status;
 	}
 }
