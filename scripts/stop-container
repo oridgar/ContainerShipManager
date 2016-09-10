@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "stopping container - "$1
+PID=$(docker inspect -f '{{.State.Pid}}' $1)
+docker stop $1
+echo "deleting port - "veth1pl$PID
+ovs-vsctl del-port veth1pl$PID
+echo "done"

@@ -21,7 +21,7 @@ public class GeneralMessageReceiverServiceImpl implements
 	
 	public static final String CREATE_TEMPLATE = "docker create --name %s --net='none' -it %s";
 	public static final String START_TEMPLATE = "docker start %s";
-	public static final String STOP_TEMPLATE = "docker stop %s";
+	public static final String STOP_TEMPLATE = "/usr/local/bin/stop-container %s";
 	public static final String REMOVE_TEMPLATE = "docker rm --force %s";
 	public static final String CONTAINER_NW_SETUP_TEMPLATE = "/usr/local/bin/pipework %s %s %s/%s@%s";
 	
