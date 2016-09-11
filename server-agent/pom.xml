@@ -6,7 +6,7 @@
 	<groupId>org.learning</groupId>
 	<artifactId>agent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>server-agent</name>
 	<description>agent for server manager</description>
@@ -59,6 +59,12 @@
 		    <version>3.0</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
 		
 		
 		<dependency>
@@ -74,6 +80,15 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+		        <groupId>org.apache.tomcat.maven</groupId>
+		        <artifactId>tomcat7-maven-plugin</artifactId>
+		        <version>2.1</version>
+		        <configuration>
+		          <url>http://${tomcat-location}/manager/text</url>
+		          <path>/csa</path>		          
+		        </configuration>  
+		     </plugin>
 		</plugins>
 	</build>
 
