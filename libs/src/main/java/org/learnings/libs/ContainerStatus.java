@@ -1,5 +1,7 @@
 package org.learnings.libs;
 
+import java.util.Arrays;
+
 public class ContainerStatus {
 	private String state;
 	private String id;
@@ -18,6 +20,11 @@ public class ContainerStatus {
 	public static final String RUNNING = "RUNNING";
 	public static final String STOPPED = "STOPPED";
 	public static final String PAUSED = "PAUSED";
+	public static final String REMOVED = "REMOVED";
+	
+	public ContainerStatus() {
+		super();
+	}
 	
 	public String getState() {
 		return state;
@@ -122,4 +129,16 @@ public class ContainerStatus {
 	public void setCmd(String cmd) {
 		this.cmd = cmd;
 	}
+
+	@Override
+	public String toString() {
+		return "ContainerStatus [state=" + state + ", id=" + id
+				+ ", imageName=" + imageName + ", createdDate=" + createdDate
+				+ ", startedDate=" + startedDate + ", finishedDate="
+				+ finishedDate + ", usedPorts=" + Arrays.toString(usedPorts)
+				+ "]";
+	}
+	
+	
+	
 }
