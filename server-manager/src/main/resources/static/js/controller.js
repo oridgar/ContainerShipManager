@@ -51,6 +51,12 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 		});
 	};
 
+	$scope.getImagesList = function() {
+		simpleService.getImagesList().then(function (imagesList) {
+			$scope.imagesList = imagesList;
+		});
+	};
+
 	$scope.addServer = function() {
 		simpleService.createSystem($scope.newserver).then(function () {
 			$scope.getServersList();
@@ -68,6 +74,12 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 	$scope.addContainer = function() {
 		simpleService.createContainer($scope.newcontainer).then(function () {
 			$scope.getContainersList();
+		});
+	};
+
+	$scope.addImage = function() {
+		simpleService.createImage($scope.newimage).then(function () {
+			$scope.getImagesList();
 		});
 	};
 
@@ -111,12 +123,21 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 		});
 	};
 
+	$scope.removeImageDirect = function() {
+		var imageId = $scope.imagesList[$scope.selectedRow].id;
+		simpleService.deleteImage(imageId).then(function () {
+			$scope.getImagesList();
+		});
+	};
+
 	$scope.startContainerDirect = function() {
 		var containerId = $scope.containersList[$scope.selectedRow].id;
 		simpleService.startContainer(containerId).then(function () {
 			$scope.getContainersList();
 		});
 	};
+
+
 
 	$scope.stopContainerDirect = function() {
 		var containerId = $scope.containersList[$scope.selectedRow].id;
@@ -152,6 +173,7 @@ angular.module('csm').controller('MainController', ['$scope', '$http', 'simpleSe
 		$scope.getUsersList();
 		$scope.getServersList();
 		$scope.getContainersList();
+		$scope.getImagesList();
 	};
 	$scope.init();
 

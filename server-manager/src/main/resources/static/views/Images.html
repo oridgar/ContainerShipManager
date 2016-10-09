@@ -1,50 +1,31 @@
 <div class="row">
-	<h2>Containers</h2>
+	<h2>Images</h2>
 	<table class="table table-hover tablerows">
 	 	<thead>
 	 		<tr>
 	 			<th>Id</th>
 	 			<th>Name</th>
-	 			<th>Image</th>
-	 			<th>Server Name</th>
-	 			<th>User Name</th>
-        <th>IP</th>
-        <th>State</th>
 	 		</tr>	
 	 	<thead>
-	 	<tr ng-repeat="container in containersList" ng-click="setClickedRow($index)" ng-class="{'selected':$index == selectedRow}">
-	 		<td> {{ container.id }} </td>
-	 		<td> {{ container.name }} </td>
-	 		<td> {{ container.image }} </td>
-	 		<td> {{ container.server.name }} </td>
-	 		<td> {{ container.user.name }} </td>
-      <td> {{ container.ip }} </td>
-      <td> {{ container.status.state }} </td>
+	 	<tr ng-repeat="image in imagesList" ng-click="setClickedRow($index)" ng-class="{'selected':$index == selectedRow}">
+	 		<td> {{ image.id }} </td>
+	 		<td> {{ image.name }} </td>
 	 	</tr>
 	</table>
 
   <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addContainer">Add Container</button>
-  <!--
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#removeContainer">Remove Container</button>
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#startContainer">Start Container</button>
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#stopContainer">Stop Container</button>
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#restartContainer">Restart Container</button>
-  -->
-  <button type="button" class="btn btn-info btn-lg" ng-disabled="selectedRow == undefined" data-ng-click="removeContainerDirect()">Remove Container</button>
-  <button type="button" class="btn btn-info btn-lg" ng-disabled="selectedRow == undefined" data-ng-click="startContainerDirect()">Start Container</button>
-  <button type="button" class="btn btn-info btn-lg" ng-disabled="selectedRow == undefined" data-ng-click="stopContainerDirect()">Stop Container</button>
-  <button type="button" class="btn btn-info btn-lg" ng-disabled="selectedRow == undefined" data-ng-click="restartContainerDirect()">Restart Container</button>
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addImage">Add Image</button>
+  <button type="button" class="btn btn-info btn-lg" ng-disabled="selectedRow == undefined" data-ng-click="removeImageDirect()">Remove Image</button>
 
   <!-- Modal -->
-  <div class="modal fade" id="addContainer" role="dialog">
+  <div class="modal fade" id="addImage" role="dialog">
     <div class="modal-dialog">
     
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Add Container</h4>
+          <h4 class="modal-title">Add Image</h4>
         </div>
         <div class="modal-body">
             
@@ -52,64 +33,10 @@
             <form ng-submit="addContainer()">
               <div class="row">
                 <label class="col-sm-offset-1 col-sm-1">Name:</label>
-                <input class="col-sm-2" type="text" data-ng-model="newcontainer.name"></input>
+                <input class="col-sm-2" type="text" data-ng-model="newimage.name"></input>
               </div>
-              <div class="row">
-                </br>
-                <label class="col-sm-offset-1 col-sm-1">Image:</label>
-                <input class="col-sm-2" type="text" data-ng-model="newcontainer.image"></input>
-              </div>
-              <div class="row">
-                </br>
-                <label class="col-sm-offset-1 col-sm-1">IP Address:</label>
-                <input class="col-sm-2" type="text" data-ng-model="newcontainer.ip"></input>
-              </div>
-              <div class="row">
-                </br>
-                <label class="col-sm-offset-1 col-sm-1">Netmask:</label>
-                <input class="col-sm-2" type="text" data-ng-model="newcontainer.netmask"></input>
-              </div>
-              <div class="row">
-                </br>
-                <label class="col-sm-offset-1 col-sm-1">Gateway:</label>
-                <input class="col-sm-2" type="text" data-ng-model="newcontainer.gateway"></input>
-              </div>
-                <!-- </br>
-                <label>ServerId</label>
-                <select ng-init="newcontainer.serverId = serversList[0].id" ng-model="newcontainer.serverId">
-                  <option ng-selected="{{server.id == newcontainer.serverId}}" ng-repeat="server in serversList" value="{{server.id}}">{{server.name}}</option>
-                </select>
-                -->
-                <!-- <input type="text" data-ng-model="newcontainer.serverId"></input> -->
-                <!--
-                </br>
-                <label>UserId</label>
-                <select ng-init="newcontainer.userId = usersList[0].id" ng-model="newcontainer.userId">
-                  <option ng-selected="{{user.id == newcontainer.userId}}" ng-repeat="user in usersList" value="{{user.id}}">{{user.name}}</option>
-                </select>
-                -->
-              <div class="row">
-                </br>
-                <label class="col-sm-offset-1 col-sm-1">ServerId:</label>
-                <select class="col-sm-2" ng-model="newcontainer.serverId" 
-                        ng-init="newcontainer.serverId = newcontainer.serverId || serversList[0].id"
-                        ng-options="server.id as server.name for server in serversList">
-                </select>
-              </div>
-              <div class="row">
-                </br>
-                <label class="col-sm-offset-1 col-sm-1">UserId:</label>
-                <select class="col-sm-2" ng-model="newcontainer.userId" 
-                        ng-init="newcontainer.userId = newcontainer.userId || usersList[0].id"
-                        ng-options="user.id as user.name for user in usersList">
-                </select>
-              </div>
-
-
-              <!-- <input type="text" data-ng-model="newcontainer.userId"></input> -->
-
               <div class="row modal-footer">
-                <button type="button" class="col-sm-offset-1 col-sm-1 btn btn-default" data-dismiss="modal" data-ng-click="addContainer()">Add</button>
+                <button type="button" class="col-sm-offset-1 col-sm-1 btn btn-default" data-dismiss="modal" data-ng-click="addImage()">Add</button>
                 <!-- <button type="submit" class="col-sm-offset-1 col-sm-1 btn btn-primary" data-dismiss="modal">Add</button> -->
                 <button type="button" class="col-sm-1 btn btn-default" data-dismiss="modal">Cancel</button>
               </div>
@@ -119,103 +46,3 @@
       </div>
     </div>
   </div>
-  <!-- Modal -->
-  <!--
-  <div class="modal fade" id="removeContainer" role="dialog">
-    <div class="modal-dialog">
-    
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Remove Container</h4>
-        </div>
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-          </br>
-          <label>Id</label>
-          <input type="text" data-ng-model="deleteId"></input>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="deleteContainer()">Delete</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="startContainer" role="dialog">
-    <div class="modal-dialog">
-    
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Start Container</h4>
-        </div>
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-          </br>
-          <label>Id</label>
-          <input type="text" data-ng-model="containerId"></input>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="startContainer()">Start</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="stopContainer" role="dialog">
-    <div class="modal-dialog">
-    
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Remove Container</h4>
-        </div>
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-          </br>
-          <label>Id</label>
-          <input type="text" data-ng-model="containerId"></input>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="stopContainer()">Stop</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="restartContainer" role="dialog">
-    <div class="modal-dialog">
-    
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Remove Container</h4>
-        </div>
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-          </br>
-          <label>Id</label>
-          <input type="text" data-ng-model="containerId"></input>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="restartContainer()">Restart</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
--->
-
-	<div id="the-slider" class="carousel slide" data-ride="carousel">
-		<div class="carousel-inner">
-			<div class="item">
-				<p>template1</p>
-			</div>
-		</div>
-	</div>
-</div>

@@ -9,6 +9,8 @@ import org.learnings.container.domain.Container;
 import org.learnings.container.domain.ContainerImpl;
 import org.learnings.container.repository.ContainerRepository;
 import org.learnings.container.service.ContainerService;
+import org.learnings.image.domain.ImageImpl;
+import org.learnings.image.service.ImageService;
 import org.learnings.libs.Command;
 import org.learnings.libs.ContainerCommandDO;
 import org.learnings.libs.ContainerStatus;
@@ -38,6 +40,9 @@ public class ContainerServiceImpl implements ContainerService {
 	private UserService userService;
 	
 	@Autowired
+	private ImageService imageService;
+	
+	@Autowired
 	private RabbitTemplate rabbitTemplate;
 	
 	@Override
@@ -55,15 +60,18 @@ public class ContainerServiceImpl implements ContainerService {
 	@Transactional
 	public void createContainer(ContainerImpl details) {
 		SystemLinux containerServer = systemService.getSystem(details.getServerId());
+		ImageImpl image = imageService.getImage(details.getImageId());
 		
 		details.setServer(containerServer);
 		details.setUser(userService.getUser(details.getUserId()));;
+		details.setImage(imageService.getImage(details.getImageId()));
 		//details.getServer().addContainer(details);
 		
 		ContainerCommandDO sendCommand = new ContainerCommandDO();
 		sendCommand.setCommandType(ContainerCommandDO.CREATE_COMMAND);
 		sendCommand.setId(details.getId());
-		sendCommand.setImageName(details.getImage());
+		//sendCommand.setImageName(details.getImage());
+		sendCommand.setImageName(image.getName());
 		sendCommand.setName(details.getName());
 		sendCommand.setIp(details.getIp());
 		sendCommand.setNetmask(details.getNetmask());

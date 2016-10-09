@@ -15,7 +15,7 @@
 	 	<tr ng-repeat="container in containersList" ng-click="setClickedRow($index)" ng-class="{'selected':$index == selectedRow}">
 	 		<td> {{ container.id }} </td>
 	 		<td> {{ container.name }} </td>
-	 		<td> {{ container.image }} </td>
+	 		<td> {{ container.image.name }} </td>
 	 		<td> {{ container.server.name }} </td>
 	 		<td> {{ container.user.name }} </td>
       <td> {{ container.ip }} </td>
@@ -57,8 +57,18 @@
               <div class="row">
                 </br>
                 <label class="col-sm-offset-1 col-sm-1">Image:</label>
+                <select class="col-sm-2" ng-model="newcontainer.imageId"
+                        ng-init="newcontainer.imageId = newcontainer.imageId || imagesList[0].id"
+                        ng-options="image.id as image.name for image in imagesList">
+                </select>
+              </div>
+              <!--
+              <div class="row">
+                </br>
+                <label class="col-sm-offset-1 col-sm-1">Image:</label>
                 <input class="col-sm-2" type="text" data-ng-model="newcontainer.image"></input>
               </div>
+              -->
               <div class="row">
                 </br>
                 <label class="col-sm-offset-1 col-sm-1">IP Address:</label>
@@ -90,7 +100,7 @@
                 -->
               <div class="row">
                 </br>
-                <label class="col-sm-offset-1 col-sm-1">ServerId:</label>
+                <label class="col-sm-offset-1 col-sm-1">Server:</label>
                 <select class="col-sm-2" ng-model="newcontainer.serverId" 
                         ng-init="newcontainer.serverId = newcontainer.serverId || serversList[0].id"
                         ng-options="server.id as server.name for server in serversList">
@@ -98,7 +108,7 @@
               </div>
               <div class="row">
                 </br>
-                <label class="col-sm-offset-1 col-sm-1">UserId:</label>
+                <label class="col-sm-offset-1 col-sm-1">User:</label>
                 <select class="col-sm-2" ng-model="newcontainer.userId" 
                         ng-init="newcontainer.userId = newcontainer.userId || usersList[0].id"
                         ng-options="user.id as user.name for user in usersList">

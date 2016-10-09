@@ -209,6 +209,39 @@ angular.module('csm').service('simpleService', ['$http', function ($http) {
 		});
 	};
 
+	//Image
+	this.getImagesList = function() {
+		return $http({
+	        url: urlBase + '/image',
+	        method: "GET",
+	        headers: { 'Content-Type' : 'application/json' }
+	    }).then(function (response) {
+			return response.data;
+		});
+	};
+
+	this.createImage = function(imageDetails) {
+		return $http({
+	        url: urlBase + '/image',
+	        method: "POST",
+	        headers: { 'Content-Type' : 'application/json;charset=UTF-8' },
+	        data : imageDetails
+	    }).then(function (response) {
+			return response.data;
+		});
+	};
+
+	this.deleteImage = function(imageId) {
+		return $http({
+	        url: urlBase + '/image/' + imageId,
+	        method: "DELETE",
+	        headers: { 'Content-Type' : 'application/json;charset=UTF-8' }
+	    }).then(function (response) {
+			return response.data;
+		});
+	};
+
+
 	this.registerServer = function($serverDetails) {
 
 	};

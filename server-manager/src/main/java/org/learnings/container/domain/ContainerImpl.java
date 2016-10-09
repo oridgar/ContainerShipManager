@@ -7,10 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
+import org.learnings.image.domain.ImageImpl;
 import org.learnings.system.domain.System;
 import org.learnings.system.domain.SystemLinux;
 import org.learnings.users.domain.User;
@@ -30,8 +31,8 @@ public class ContainerImpl {
 	@Column(name = "name", length = 100)
 	private String name;
 
-	@Column(name = "image", length = 100)
-	private String image;
+	//@Column(name = "image", length = 100)
+	//private String image;
 
 	@Column(name = "ip")
 	private String ip;
@@ -50,8 +51,16 @@ public class ContainerImpl {
 	@Transient
 	private String userId;
 
+	//@Column(name = "image_id")
+	@Transient
+	private int imageId;
+	
 	@Transient
 	private String status;
+
+	//----
+	//Join
+	//----
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	//@JoinColumn(name="serverid")
@@ -59,6 +68,13 @@ public class ContainerImpl {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;	
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	public ImageImpl image;
+
+	//-------------------
+	//Getters and Setters
+	//-------------------
 	
 	//@Override
 	public int getId() {
@@ -76,10 +92,23 @@ public class ContainerImpl {
 	}
 
 	//@Override
-	public String getImage() {
+	public ImageImpl getImage() {
 		return image;
 	}
+	
+	public void setImage(ImageImpl image) {
+		this.image = image;
+	}
 
+	
+	public int getImageId() {
+		return imageId;
+	}
+	
+	public void setImageId(int imageId) {
+		this.imageId = imageId;
+	}
+	
 	//@Override
 	public String getUserId() {
 		return userId;
@@ -134,6 +163,4 @@ public class ContainerImpl {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
 }

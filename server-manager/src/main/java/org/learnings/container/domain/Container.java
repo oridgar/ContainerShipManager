@@ -7,6 +7,7 @@ public interface Container {
 	public String getName();
 	public String getServerId();
 	public String getImage();
+	public String getImageId();
 	public String getUserId();
 //	public SystemLinux getServer();
 //	void setServer(SystemLinux server);
