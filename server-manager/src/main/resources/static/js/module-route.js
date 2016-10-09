@@ -11,6 +11,10 @@ angular.module('csm').config(['$routeProvider',
 			controller: 'MainController',
 			templateUrl: 'views/Containers.html'
 		})
+		.when('/images', {
+			controller: 'MainController',
+			templateUrl: 'views/Images.html'
+		})
 		.when('/users', {
 			controller: 'MainController',
 			templateUrl: 'views/Users.html'

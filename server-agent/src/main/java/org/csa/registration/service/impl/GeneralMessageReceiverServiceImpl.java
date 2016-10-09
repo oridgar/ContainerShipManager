@@ -180,14 +180,15 @@ public class GeneralMessageReceiverServiceImpl implements
 			containerStatus.setImageName(configObject.get("Image").toString());
 			
 			Map<String, Object> exposedPorts = (Map<String, Object>)configObject.get("ExposedPorts");
-			String [] ports = new String [exposedPorts.keySet().size()];
-			int counter = 0;
-			for(String port : exposedPorts.keySet()){
-				ports[counter] = port.split("/")[0];
-				counter++;
+			if (exposedPorts != null) { 
+				String [] ports = new String [exposedPorts.keySet().size()];
+				int counter = 0;
+				for(String port : exposedPorts.keySet()){
+					ports[counter] = port.split("/")[0];
+					counter++;
+				}
+				containerStatus.setUsedPorts(ports);
 			}
-			containerStatus.setUsedPorts(ports);
-			
 		} 
 		catch (IOException e) {
 			logger.error(e.getMessage(), e);

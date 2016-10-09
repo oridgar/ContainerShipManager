@@ -100,6 +100,9 @@ public class ContainerServiceImpl implements ContainerService {
 		sendCommand.setCommandType(ContainerCommandDO.START_COMMAND);
 		sendCommand.setId(currCont.getId());
 		sendCommand.setName(currCont.getName());
+		sendCommand.setIp(currCont.getIp());
+		sendCommand.setNetmask(currCont.getNetmask());
+		sendCommand.setGateway(currCont.getGateway());
 		
 		sendMqCommand(sendCommand, Integer.toString(currCont.getServer().getId()));
 	}
@@ -125,8 +128,8 @@ public class ContainerServiceImpl implements ContainerService {
 	}
 
 	
-	private String sendMqCommand(Object message, String queueName) {
-		String ret = null;
+	private ContainerStatus sendMqCommand(Object message, String queueName) {
+		ContainerStatus status = null;
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -143,12 +146,14 @@ public class ContainerServiceImpl implements ContainerService {
 			//Sending the message and wait for reply
 			Message retMessage = rabbitTemplate.sendAndReceive("", queueName, mqMessage);
 			if (retMessage != null)  {
-				ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
+				//ret = new String(retMessage.getBody(), StandardCharsets.UTF_8);
+				ObjectMapper objectMapper = new ObjectMapper();
+				status = objectMapper.readValue(retMessage.getBody(), ContainerStatus.class);
 			}
 		} catch (AmqpException | IOException e) {
 			e.printStackTrace();
 		}
-		return ret;
+		return status;
 	}
 
 	private String sendMqCommandAsync(Object message, String queueName) {
@@ -178,16 +183,14 @@ public class ContainerServiceImpl implements ContainerService {
 	public ContainerStatus getContainerStatus(int id) {
 	 	ContainerImpl container = this.getContainer(id);
 
-//		ContainerCommandDO sendCommand = new ContainerCommandDO();
-//		sendCommand.setCommandType(ContainerCommandDO.GET_STATUS_COMMAND);
-//		sendCommand.setId(container.getId());
-//		sendCommand.setName(container.getName());
-//		ContainerStatus result = sendMqCommand(sendCommand, Integer.toString(container.getServer().getId()));
-
+		ContainerCommandDO sendCommand = new ContainerCommandDO();
+		sendCommand.setCommandType(ContainerCommandDO.GET_STATUS_COMMAND);
+		sendCommand.setId(container.getId());
+		sendCommand.setName(container.getName());
 		
-		//STUB
-	 	ContainerStatus status = new ContainerStatus();
-	 	status.setState("working");
+		ContainerStatus status = sendMqCommand(sendCommand, Integer.toString(container.getServer().getId()));
+		//ContainerStatus result 
+		
 	 	return status;
 	}
 }
