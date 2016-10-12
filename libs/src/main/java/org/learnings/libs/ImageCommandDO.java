@@ -6,8 +6,9 @@ public class ImageCommandDO implements ICommand{
 	private String name;
 	private int id;
 	
-	public static final String CREATE_COMMAND = "CREATE_COMMAND";
-	public static final String REMOVE_COMMAND = "REMOVE_COMMAND";
+	public static final String PULL_IMAGE_COMMAND = "PULL_IMAGE_COMMAND";
+	public static final String REMOVE_IMAGE_COMMAND = "REMOVE_IMAGE_COMMAND";
+	public static final String GET_IMAGE_STATUS_COMMAND = "GET_IMAGE_STATUS_COMMAND";
 		
 	
 	public ImageCommandDO() {

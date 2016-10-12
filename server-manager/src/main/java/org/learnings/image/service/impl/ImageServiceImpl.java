@@ -109,7 +109,7 @@ public class ImageServiceImpl implements ImageService {
 		List<SystemLinux> systemList = systemService.getSystemList();
 		
 		ImageCommandDO sendCommand = new ImageCommandDO();
-		sendCommand.setCommandType(ImageCommandDO.CREATE_COMMAND);
+		sendCommand.setCommandType(ImageCommandDO.PULL_IMAGE_COMMAND);
 		sendCommand.setId(details.getId());
 		sendCommand.setName(details.getName());
 				 
@@ -131,7 +131,7 @@ public class ImageServiceImpl implements ImageService {
 		ImageImpl currImage = this.getImage(id);
 		
 		ImageCommandDO sendCommand = new ImageCommandDO();
-		sendCommand.setCommandType(ImageCommandDO.REMOVE_COMMAND);
+		sendCommand.setCommandType(ImageCommandDO.REMOVE_IMAGE_COMMAND);
 		sendCommand.setId(currImage.getId());
 		sendCommand.setName(currImage.getName());
 		

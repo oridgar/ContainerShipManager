@@ -13,6 +13,8 @@ import org.csa.registration.service.GeneralMessageReceiverService;
 import org.learnings.libs.ContainerCommandDO;
 import org.learnings.libs.ContainerStatus;
 import org.learnings.libs.ICommand;
+import org.learnings.libs.ImageCommandDO;
+import org.learnings.libs.ImageStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,36 +32,65 @@ public class GeneralMessageReceiverServiceImpl implements
 	public static final String GET_STATUS_TEMPLATE = "docker inspect %s";
 	public static final String CONTAINER_NW_SETUP_TEMPLATE = "/usr/local/bin/pipework %s %s %s/%s@%s";
 	
+	public static final String PULL_IMAGE_TEMPLATE = "docker pull %s";
+	public static final String REMOVE_IMAGE_TEMPLATE = "docker rmi %s";
+	
 	
 	
 	private final Logger logger = LoggerFactory.getLogger(org.csa.registration.service.impl.GeneralMessageReceiverServiceImpl.class);
 	
 		
 	public Object receiveMessage(ICommand message) {
-		ContainerStatus containerStatus = new ContainerStatus();
+		Object status = null;
 		
 		try{
-			ContainerCommandDO containerCommandDO = (ContainerCommandDO)message;
-			
-			if(!containerCommandDO.getCommandType().equals(ContainerCommandDO.GET_STATUS_COMMAND)){
-				String command = getCommand(containerCommandDO);
-				String res = executeCommand(command);
-				
-				if(containerCommandDO.getCommandType().equals(ContainerCommandDO.START_COMMAND)){
-					containerCommandDO.setCommandType(ContainerCommandDO.CONTAINER_NW_SETUP_COMMAND);
-					String nwSetupCommand = getCommand(containerCommandDO);
-					res = executeCommand(nwSetupCommand);
-				}
+			if(message instanceof ContainerCommandDO){
+				status = executeContainerCommand((ContainerCommandDO)message);
 			}
-			containerStatus = getContainerStatusAfterCommand(containerCommandDO);
-				
+			else if(message instanceof ImageCommandDO){
+				status = executeImageCommand((ImageCommandDO)message);
+			}	
 		}
 		catch (Throwable e){
 			logger.error(e.getMessage(), e);
 		}
 		
+		return status;
+	}
+	
+	
+	private ContainerStatus executeContainerCommand(ContainerCommandDO containerCommandDO){
+		
+		ContainerStatus containerStatus = new ContainerStatus();
+		
+		if(!containerCommandDO.getCommandType().equals(ContainerCommandDO.GET_STATUS_COMMAND)){
+			String command = getContainerCommand(containerCommandDO);
+			String res = executeCommand(command);
+			
+			if(containerCommandDO.getCommandType().equals(ContainerCommandDO.START_COMMAND)){
+				containerCommandDO.setCommandType(ContainerCommandDO.CONTAINER_NW_SETUP_COMMAND);
+				String nwSetupCommand = getContainerCommand(containerCommandDO);
+				res = executeCommand(nwSetupCommand);
+			}
+		}
+		containerStatus = getContainerStatusAfterCommand(containerCommandDO);
+		
 		return containerStatus;
 	}
+	
+	
+	private ImageStatus executeImageCommand(ImageCommandDO imageCommandDO){
+		ImageStatus imageStatus = new ImageStatus();
+		
+		if(!imageCommandDO.getCommandType().equals(ImageCommandDO.GET_IMAGE_STATUS_COMMAND)){
+			String command = getImageCommand(imageCommandDO);
+			String res = executeCommand(command);
+		}
+		imageStatus = getImageStatusAfterCommand(imageCommandDO);
+		return imageStatus;
+	}
+		
+	
 	
 	
 	private String executeCommand(String command){
@@ -97,7 +128,7 @@ public class GeneralMessageReceiverServiceImpl implements
 	}
 	
 	
-	private String getCommand(ContainerCommandDO containerCommandDO){
+	private String getContainerCommand(ContainerCommandDO containerCommandDO){
 		String command = null;
 		
 		if(containerCommandDO.getCommandType().equals(ContainerCommandDO.CREATE_COMMAND)){
@@ -127,6 +158,23 @@ public class GeneralMessageReceiverServiceImpl implements
 	}
 	
 	
+	private String getImageCommand(ImageCommandDO imageCommandDO){
+		String command = null;
+		
+		if(imageCommandDO.getCommandType().equals(ImageCommandDO.PULL_IMAGE_COMMAND)){
+			command = String.format(PULL_IMAGE_TEMPLATE, imageCommandDO.getName());
+		}
+		else if(imageCommandDO.getCommandType().equals(ImageCommandDO.REMOVE_IMAGE_COMMAND)){
+			command = String.format(REMOVE_IMAGE_TEMPLATE, imageCommandDO.getName());
+		}
+		else if(imageCommandDO.getCommandType().equals(ImageCommandDO.GET_IMAGE_STATUS_COMMAND)){
+			command = String.format(GET_STATUS_TEMPLATE, imageCommandDO.getName());
+		}
+		
+		return command;
+	}
+	
+	
 	private ContainerStatus getContainerStatusAfterCommand(ContainerCommandDO containerCommandDO){
 		ContainerStatus containerStatus = new ContainerStatus();
 		if(containerCommandDO.getCommandType().equals(ContainerCommandDO.REMOVE_COMMAND)){
@@ -136,7 +184,7 @@ public class GeneralMessageReceiverServiceImpl implements
 			ContainerCommandDO containerStatusCommandDO = new ContainerCommandDO();
 			containerStatusCommandDO.setName(containerCommandDO.getName());
 			containerStatusCommandDO.setCommandType(ContainerCommandDO.GET_STATUS_COMMAND);
-			String command = getCommand(containerStatusCommandDO);
+			String command = getContainerCommand(containerStatusCommandDO);
 			String res = executeCommand(command);
 			containerStatus = getStatus(res);
 		}
@@ -190,6 +238,44 @@ public class GeneralMessageReceiverServiceImpl implements
 			logger.error(e.getMessage(), e);
 		}
 		return containerStatus;
+	}
+	
+	private ImageStatus getImageStatusAfterCommand(ImageCommandDO imageCommandDO){
+		ImageStatus imageStatus = new ImageStatus();
+		if(imageCommandDO.getCommandType().equals(ImageCommandDO.REMOVE_IMAGE_COMMAND)){
+			imageStatus.setState(ImageStatus.REMOVED);
+		}
+		else{
+			ImageCommandDO imageStatusCommandDO = new ImageCommandDO();
+			imageStatusCommandDO.setName(imageCommandDO.getName());
+			imageStatusCommandDO.setCommandType(ImageCommandDO.GET_IMAGE_STATUS_COMMAND);
+			String command = getImageCommand(imageStatusCommandDO);
+			String res = executeCommand(command);
+			imageStatus = getImageStatus(res, imageStatusCommandDO);
+		}
+		return imageStatus;
+	}
+	
+	
+	private ImageStatus getImageStatus(String data, ImageCommandDO imageStatusCommandDO){
+		ImageStatus imageStatus = new ImageStatus();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			
+			ArrayList<Object> objectsList = mapper.readValue(data, ArrayList.class);	
+			
+			//upper element
+			Map<String, Object> singleObject = (Map<String, Object>)objectsList.get(0);
+			imageStatus.setId(singleObject.get("Id").toString());
+			imageStatus.setCreatedDate(singleObject.get("Created").toString());
+			imageStatus.setState(ImageStatus.CREATED);
+			imageStatus.setName(imageStatusCommandDO.getName());
+			
+		} 
+		catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return imageStatus;
 	}
 	
 	
