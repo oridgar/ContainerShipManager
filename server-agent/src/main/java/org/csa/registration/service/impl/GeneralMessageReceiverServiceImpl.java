@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -32,7 +31,6 @@ public class GeneralMessageReceiverServiceImpl implements
 	public static final String CONTAINER_NW_SETUP_TEMPLATE = "/usr/local/bin/pipework %s %s %s/%s@%s";
 	
 	
-	private Map<String, ContainerCommandDO> containerDetailsMap = new HashMap<String, ContainerCommandDO>();
 	
 	private final Logger logger = LoggerFactory.getLogger(org.csa.registration.service.impl.GeneralMessageReceiverServiceImpl.class);
 	
@@ -48,9 +46,8 @@ public class GeneralMessageReceiverServiceImpl implements
 				String res = executeCommand(command);
 				
 				if(containerCommandDO.getCommandType().equals(ContainerCommandDO.START_COMMAND)){
-					ContainerCommandDO nwSetupContainerCommandDO = containerDetailsMap.get(containerCommandDO.getName());
-					nwSetupContainerCommandDO.setCommandType(ContainerCommandDO.CONTAINER_NW_SETUP_COMMAND);
-					String nwSetupCommand = getCommand(nwSetupContainerCommandDO);
+					containerCommandDO.setCommandType(ContainerCommandDO.CONTAINER_NW_SETUP_COMMAND);
+					String nwSetupCommand = getCommand(containerCommandDO);
 					res = executeCommand(nwSetupCommand);
 				}
 			}
@@ -104,7 +101,6 @@ public class GeneralMessageReceiverServiceImpl implements
 		String command = null;
 		
 		if(containerCommandDO.getCommandType().equals(ContainerCommandDO.CREATE_COMMAND)){
-			containerDetailsMap.put(containerCommandDO.getName(), containerCommandDO);
 			command = String.format(CREATE_TEMPLATE, containerCommandDO.getName(), containerCommandDO.getImageName());
 		}
 		else if(containerCommandDO.getCommandType().equals(ContainerCommandDO.START_COMMAND)){
